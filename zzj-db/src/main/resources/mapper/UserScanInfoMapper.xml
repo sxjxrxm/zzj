@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.UserScanInfoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.UserScanInfo" >
+    <id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <id column="SCAN_NO" property="scanNo" jdbcType="INTEGER" />
+    <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR" />
+    <result column="HANDLE_TIME" property="handleTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 查询结果数据结构定义 -->
+  <resultMap id="ActionResultMap" type="com.zzj.db.model.ActionResultVO" >
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR" />
+    <result column="HANDLE_TIME" property="handleTime" jdbcType="TIMESTAMP" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE_NAME" property="busiTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    USER_ID, TOPIC_CD, SCAN_NO, BUSI_TYPE, TOPIC_NAME, HANDLE_TIME
+  </sql>
+  <!--根据主键查询指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.UserScanInfoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_scan_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+      and SCAN_NO = #{scanNo,jdbcType=INTEGER}
+  </select>
+  <!--根据主键删除指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="com.zzj.db.dto.UserScanInfoKey" >
+    delete from user_scan_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+      and SCAN_NO = #{scanNo,jdbcType=INTEGER}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.UserScanInfo" >
+    insert into user_scan_info (USER_ID, TOPIC_CD, SCAN_NO, 
+      BUSI_TYPE, TOPIC_NAME, HANDLE_TIME
+      )
+    values (#{userId,jdbcType=VARCHAR}, #{topicCd,jdbcType=VARCHAR}, #{scanNo,jdbcType=INTEGER}, 
+      #{busiType,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{handleTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!--插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.UserScanInfo" >
+    insert into user_scan_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="topicCd != null" >
+        TOPIC_CD,
+      </if>
+      <if test="scanNo != null" >
+        SCAN_NO,
+      </if>
+      <if test="busiType != null" >
+        BUSI_TYPE,
+      </if>
+      <if test="topicName != null" >
+        TOPIC_NAME,
+      </if>
+      <if test="handleTime != null" >
+        HANDLE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicCd != null" >
+        #{topicCd,jdbcType=VARCHAR},
+      </if>
+      <if test="scanNo != null" >
+        #{scanNo,jdbcType=INTEGER},
+      </if>
+      <if test="busiType != null" >
+        #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null" >
+        #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.UserScanInfo" >
+    update user_scan_info
+    <set >
+      <if test="busiType != null" >
+        BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null" >
+        TOPIC_NAME = #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        HANDLE_TIME = #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+      and SCAN_NO = #{scanNo,jdbcType=INTEGER}
+  </update>
+  <!--根据条件更新指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.UserScanInfo" >
+    update user_scan_info
+    set BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      TOPIC_NAME = #{topicName,jdbcType=VARCHAR},
+      HANDLE_TIME = #{handleTime,jdbcType=TIMESTAMP}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+      and SCAN_NO = #{scanNo,jdbcType=INTEGER}
+  </update>
+  <!--根据条件查询分页记录-->
+  <select id="selectByOption" resultMap="ActionResultMap" parameterType="com.zzj.db.model.ActionJknVO" >
+    select 
+      usi.TOPIC_CD,usi.BUSI_TYPE,usi.TOPIC_NAME,usi.HANDLE_TIME,
+      mci.CODE_NAME AS BUSI_TYPE_NAME,aui.USER_NAME
+    from user_scan_info usi
+    LEFT JOIN app_users_info aui
+      ON usi.USER_ID = aui.USER_ID
+	LEFT JOIN mst_code_info mci
+		ON mci.CODE_TYPE = 'busiType' AND
+		   usi.BUSI_TYPE = mci.CODE
+    where usi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and usi.TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+	  and usi.HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+	order by usi.HANDLE_TIME
+	limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据条件查询总件数-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.ActionJknVO" >
+    select 
+      count(usi.USER_ID)
+    from user_scan_info usi
+    LEFT JOIN app_users_info aui
+      ON usi.USER_ID = aui.USER_ID
+    where usi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and usi.TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+	  and usi.HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+  </select>
+  <!--根据条件查询全件输出CSV-->
+  <select id="selectAll" resultMap="ActionResultMap" parameterType="com.zzj.db.model.ActionJknVO" >
+    select 
+      usi.TOPIC_CD,usi.BUSI_TYPE,usi.TOPIC_NAME,usi.HANDLE_TIME,
+      mci.CODE_NAME AS BUSI_TYPE_NAME,aui.USER_NAME
+    from user_scan_info usi
+    LEFT JOIN app_users_info aui
+      ON usi.USER_ID = aui.USER_ID
+	LEFT JOIN mst_code_info mci
+		ON mci.CODE_TYPE = 'busiType' AND
+		   usi.BUSI_TYPE = mci.CODE
+    where usi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and usi.TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+	  and usi.HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+	order by usi.HANDLE_TIME
+  </select>
+</mapper>

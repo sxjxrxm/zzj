@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstRankInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstRankInfo" >
+    <id column="RANK_CD" property="rankCd" jdbcType="VARCHAR" />
+    <result column="RANK_NAME" property="rankName" jdbcType="VARCHAR" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    RANK_CD, RANK_NAME, CREATE_ID, CREATE_TIME
+  </sql>
+  <!--根据主键查询Mst_Rank_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_rank_info
+    where RANK_CD = #{rankCd,jdbcType=VARCHAR}
+  </select>
+  <!--查询Mst_Rank_Info表中所有记录**************-->
+  <select id="selectAllRankName" resultMap="BaseResultMap">
+    select RANK_NAME
+    from mst_rank_info
+    order by RANK_CD
+  </select>
+  <!--根据职称名称查询Mst_Rank_Info表中记录**************-->
+  <select id="selectByRankName" resultType="int" parameterType="java.lang.String">
+    select count(*)
+    from mst_rank_info
+    where RANK_NAME = #{rankName,jdbcType=VARCHAR}
+  </select>
+  <!--查询Mst_Rank_Info表中RANK_CD的最大值（RANK_CD为字符串类型，通过“+0”使其转为int型）**************-->
+  <select id="selectMaxRankCd" resultType="int">
+    select max(RANK_CD + 0) from mst_rank_info
+  </select>
+  <!--根据主键删除Mst_Rank_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from mst_rank_info
+    where RANK_CD = #{rankCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstRankInfo" >
+    insert into mst_rank_info (RANK_CD, RANK_NAME, CREATE_ID, 
+      CREATE_TIME)
+    values (#{rankCd,jdbcType=VARCHAR}, #{rankName,jdbcType=VARCHAR}, #{createId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstRankInfo" >
+    insert into mst_rank_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rankCd != null" >
+        RANK_CD,
+      </if>
+      <if test="rankName != null" >
+        RANK_NAME,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rankCd != null" >
+        #{rankCd,jdbcType=VARCHAR},
+      </if>
+      <if test="rankName != null" >
+        #{rankName,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Mst_Rank_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstRankInfo" >
+    update mst_rank_info
+    <set >
+      <if test="rankName != null" >
+        RANK_NAME = #{rankName,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where RANK_CD = #{rankCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Mst_Rank_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstRankInfo" >
+    update mst_rank_info
+    set RANK_NAME = #{rankName,jdbcType=VARCHAR},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where RANK_CD = #{rankCd,jdbcType=VARCHAR}
+  </update>
+</mapper>

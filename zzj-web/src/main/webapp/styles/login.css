@@ -1,0 +1,127 @@
+﻿body {
+    display: block;
+    background: url(../images/login.jpg) no-repeat ;
+    overflow: hidden;
+	background-size: cover;
+}
+
+@font-face {
+    font-family: fzqt;
+    src: url("font/fzqt.ttf");
+}
+
+@font-face {
+    font-family: vani;
+    src: url("font/Vani.ttf");
+}
+
+.loginmain {
+    z-index: 888;
+    height: 340px;
+    width: 540px;
+    position: absolute;
+    margin-left: -270px;
+    margin-top: -170px;
+    left: 50%;
+    top: 50%;
+    background: #808080;
+    opacity: .3;
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background: -moz-linear-gradient(left, #F00, #0F0,#00F, #FF0,#0FF, #FF00FF);
+    background: -webkit-linear-gradient(left, #F00, #0F0, #00F, #FF0, #0FF, #FF00FF);
+    background: -o-linear-gradient(left,#F00, #0F0, #00F, #FF0, #0FF, #FF00FF);
+}
+
+.row-fluid {
+    z-index: 889;
+    text-align: center;
+    width: 400px;
+    position: absolute;
+    margin-left: -260px;
+    margin-top: -160px;
+    left: 55%;
+    top: 50%;
+    background: #FFF;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    background: -moz-linear-gradient(top, #FFF, #CCC);
+    background: -webkit-linear-gradient(top, #FFF, #FFFFFF);
+    background: -o-linear-gradient(top, #FFF, #CCC);
+	/*background: url(../images/logo_pic.png) no-repeat ;*/
+}
+.back-pic {
+    z-index: 870;
+	text-align: center;
+    height: auto;
+    width: auto;
+	position: absolute;
+}
+
+.back-white {
+	text-align: center;
+    height: 20%;
+    width: 100%;
+	position: absolute;
+	top: 80%;
+    background: #FFF;
+}
+
+#clouds {
+    height: 350px;
+    background: #7B8AA1;
+}
+
+.row-fluid h1 {
+    padding: 25px 0;
+    color: #D9210D;
+}
+
+.row-fluid hr {
+    width: 80%;
+    border: none;
+    margin: 10px auto;
+    height: 1px;
+    background: -moz-linear-gradient(left, #CDDBE1, #FFF,#CDDBE1);
+    background: -webkit-linear-gradient(left,#CDDBE1, #FFF,#CDDBE1);
+    background: -o-linear-gradient(left,#CDDBE1, #f00,#CDDBE1);
+}
+
+.row-fluid .tip {
+    color:red;
+    font-weight:bold;
+    font-size:small;
+}
+
+.pcode {
+    margin-left: -35px;
+}
+
+.code {
+    width: 55px;
+}
+
+.btn {
+    width: 95px;
+}
+
+.imgcode {
+    margin-top: -4px;
+    margin-left: 10px;
+    margin-right: 8px;
+}
+
+input[type="text"] {
+    font-family: vani;
+}
+
+.tdl {
+	width: 115px;
+	height: 40px;
+	text-align: right;
+}
+
+.td_detail {text-align: left;}

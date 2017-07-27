@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.VideoInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.VideoInfo" >
+    <id column="VIDEO_CD" property="videoCd" jdbcType="VARCHAR" />
+    <result column="VIDEO_NAME" property="videoName" jdbcType="VARCHAR" />
+    <result column="VIDEO_FILE" property="videoFile" jdbcType="VARCHAR" />
+    <result column="VIDEO_ADDRESS" property="videoAddress" jdbcType="VARCHAR" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="TINYINT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_DISCOUNT" property="priceDiscount" jdbcType="DECIMAL" />
+    <result column="FREE_TIME" property="freeTime" jdbcType="TINYINT" />
+    <result column="BIG_ICON" property="bigIcon" jdbcType="VARCHAR" />
+    <result column="LITTLE_ICON" property="littleIcon" jdbcType="VARCHAR" />
+    <result column="FREE_ADDRESS" property="freeAddress" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zzj.db.dto.VideoInfo" extends="BaseResultMap" >
+    <result column="VIDEO_BRIEF" property="videoBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="VideoInfoVO" type="com.zzj.db.model.VideoInfoVO" >
+    <result column="VIDEO_CD" property="videoCd" jdbcType="VARCHAR" />
+    <result column="VIDEO_NAME" property="videoName" jdbcType="VARCHAR" />
+    <result column="VIDEO_FILE" property="videoFile" jdbcType="VARCHAR" />
+    <result column="VIDEO_ADDRESS" property="videoAddress" jdbcType="VARCHAR" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="TINYINT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_DISCOUNT" property="priceDiscount" jdbcType="DECIMAL" />
+    <result column="FREE_TIME" property="freeTime" jdbcType="TINYINT" />
+    <result column="BIG_ICON" property="bigIcon" jdbcType="VARCHAR" />
+    <result column="LITTLE_ICON" property="littleIcon" jdbcType="VARCHAR" />
+    <result column="FREE_ADDRESS" property="freeAddress" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="VideoInfoVO2" type="com.zzj.db.model.VideoInfoVO" extends="VideoInfoVO" >
+    <result column="VIDEO_BRIEF" property="videoBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    VIDEO_CD, VIDEO_NAME, VIDEO_FILE, VIDEO_ADDRESS, PAYMENT_KBN, PRICE, 
+    PRICE_DISCOUNT, FREE_TIME, BIG_ICON, LITTLE_ICON, FREE_ADDRESS, KEYWORD, DELETE_FLAG, TOP_FLAG,
+    CREATE_ID, CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    VIDEO_BRIEF
+  </sql>
+  <!--根据主键查询Video_Info中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="VideoInfoVO2" parameterType="java.lang.String" >
+    select 
+    	<include refid="Base_Column_List" />
+    	,
+    	<include refid="Blob_Column_List" />
+    from video_info
+    where VIDEO_CD = #{videoCd,jdbcType=VARCHAR}
+    and DELETE_FLAG = 0
+  </select>
+  <!--根据条件查询Video_Info中分页记录***********-->
+  <select id="selectPagging" resultType="com.zzj.db.model.VideoInfoVO" parameterType="com.zzj.db.model.VideoInfoVO" >
+	  SELECT
+	      video.VIDEO_CD as videoCd,
+	      video.VIDEO_NAME as videoName,
+	      mc1.CODE_NAME as paymentKbnDisp,
+	      uh.LIKE_COUNT as likeCount,
+	      uh.COLLECT_COUNT as collectCount,
+	      uh.SCAN_COUNT as scanCount
+	  FROM (
+		       select 
+                    DISTINCT
+					vf.VIDEO_CD
+					,vf.VIDEO_NAME
+					,vf.PAYMENT_KBN
+					,vf.CREATE_TIME
+					,vf.UPDATE_TIME
+				from video_info vf
+				left join (select * from topic_field_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) t on t.TOPIC_CD = vf.VIDEO_CD
+				left join (select * from recommend_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) r on r.TOPIC_CD = vf.VIDEO_CD
+				where vf.DELETE_FLAG = 0
+			    <if test="videoName != null" >
+			      AND vf.VIDEO_NAME like concat('%',#{videoName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="paymentKbnDisp != null" >
+			      AND vf.PAYMENT_KBN in ( ${paymentKbnDisp} )
+			    </if>
+			    <if test="sDate != null" >
+			      AND vf.CREATE_TIME &gt;= #{sDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="eDate != null" >
+			      AND vf.CREATE_TIME &lt;= #{eDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="recommendKbn != null" >
+			      AND r.RECOMMEND_KBN in ( ${recommendKbn} )
+			    </if>
+		) video
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'paymentKbn' and mc1.CODE = video.PAYMENT_KBN
+	    left join user_handle_info uh on uh.BUSI_TYPE = '03' and uh.TOPIC_CD = video.VIDEO_CD
+	    where 1 = 1
+		order by video.UPDATE_TIME desc, video.CREATE_TIME desc
+		limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <!--根据条件查询Video_Info中所有记录***********-->
+  <select id="selectAll" resultType="com.zzj.db.model.VideoInfoVO" parameterType="com.zzj.db.model.VideoInfoVO" >
+	  SELECT
+	     video.VIDEO_CD as videoCd,
+	      video.VIDEO_NAME as videoName,
+	      mc1.CODE_NAME as paymentKbnDisp,
+	      uh.LIKE_COUNT as likeCount,
+	      uh.COLLECT_COUNT as collectCount,
+	      uh.SCAN_COUNT as scanCount
+	  FROM (
+		       select 
+                    DISTINCT
+					vf.VIDEO_CD
+					,vf.VIDEO_NAME
+					,vf.PAYMENT_KBN
+					,vf.CREATE_TIME
+					,vf.UPDATE_TIME
+				from video_info vf
+				left join (select * from topic_field_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) t on t.TOPIC_CD = vf.VIDEO_CD
+				left join (select * from recommend_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) r on r.TOPIC_CD = vf.VIDEO_CD
+				where vf.DELETE_FLAG = 0
+			    <if test="videoName != null" >
+			      AND vf.VIDEO_NAME like concat('%',#{videoName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			   <if test="paymentKbnDisp != null" >
+			      AND vf.PAYMENT_KBN in ( ${paymentKbnDisp} )
+			    </if>
+			    <if test="sDate != null" >
+			      AND vf.CREATE_TIME &gt;= #{sDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="eDate != null" >
+			      AND vf.CREATE_TIME &lt;= #{eDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="recommendKbn != null" >
+			      AND r.RECOMMEND_KBN in ( ${recommendKbn} )
+			    </if>
+		) video
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'paymentKbn' and mc1.CODE = video.PAYMENT_KBN
+	    left join user_handle_info uh on uh.BUSI_TYPE = '03' and uh.TOPIC_CD = video.VIDEO_CD
+		order by video.UPDATE_TIME desc, video.CREATE_TIME desc
+  </select>
+  
+  <!--根据条件查询Video_Info中所有记录总数***********-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.VideoInfoVO" >
+	  SELECT
+	      count(*)
+	  FROM (
+		       select 
+                    DISTINCT
+					vf.VIDEO_CD
+				from video_info vf
+				left join (select * from topic_field_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) t on t.TOPIC_CD = vf.VIDEO_CD
+				left join (select * from recommend_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) r on r.TOPIC_CD = vf.VIDEO_CD
+				where vf.DELETE_FLAG = 0
+			    <if test="videoName != null" >
+			      AND vf.VIDEO_NAME like concat('%',#{videoName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="paymentKbnDisp != null" >
+			      AND vf.PAYMENT_KBN in ( ${paymentKbnDisp} )
+			    </if>
+			    <if test="sDate != null" >
+			      AND vf.CREATE_TIME &gt;= #{sDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="eDate != null" >
+			      AND vf.CREATE_TIME &lt;= #{eDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="recommendKbn != null" >
+			      AND r.RECOMMEND_KBN in ( ${recommendKbn} )
+			    </if>
+		) video
+  </select>
+  
+  <!--根据主键删除Video_Info中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from video_info
+    where VIDEO_CD = #{videoCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.VideoInfo" >
+    insert into video_info (VIDEO_CD, VIDEO_NAME, VIDEO_BRIEF, 
+      VIDEO_FILE, VIDEO_ADDRESS, PAYMENT_KBN, 
+      PRICE, PRICE_DISCOUNT, FREE_TIME, 
+      BIG_ICON, LITTLE_ICON, FREE_ADDRESS, 
+      KEYWORD, DELETE_FLAG, TOP_FLAG, CREATE_ID, 
+      CREATE_TIME, UPDATE_ID, UPDATE_TIME
+      )
+    values (#{videoCd,jdbcType=VARCHAR}, #{videoName,jdbcType=VARCHAR}, #{videoBrief,jdbcType=LONGVARCHAR}, 
+      #{videoFile,jdbcType=VARCHAR}, #{videoAddress,jdbcType=VARCHAR}, #{paymentKbn,jdbcType=TINYINT}, 
+      #{price,jdbcType=DECIMAL}, #{priceDiscount,jdbcType=DECIMAL}, #{freeTime,jdbcType=TINYINT}, 
+      #{bigIcon,jdbcType=VARCHAR}, #{littleIcon,jdbcType=VARCHAR}, #{freeAddress,jdbcType=VARCHAR}, 
+      #{keyword,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=TINYINT}, #{topFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.VideoInfo" >
+    insert into video_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="videoCd != null" >
+        VIDEO_CD,
+      </if>
+      <if test="videoName != null" >
+        VIDEO_NAME,
+      </if>
+      <if test="videoBrief != null" >
+        VIDEO_BRIEF,
+      </if>
+      <if test="videoFile != null" >
+        VIDEO_FILE,
+      </if>
+      <if test="videoAddress != null" >
+        VIDEO_ADDRESS,
+      </if>
+      <if test="paymentKbn != null" >
+        PAYMENT_KBN,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="priceDiscount != null" >
+        PRICE_DISCOUNT,
+      </if>
+      <if test="freeTime != null" >
+        FREE_TIME,
+      </if>
+      <if test="bigIcon != null" >
+        BIG_ICON,
+      </if>
+      <if test="littleIcon != null" >
+        LITTLE_ICON,
+      </if>
+      <if test="freeAddress != null" >
+        FREE_ADDRESS,
+      </if>
+      <if test="keyword != null" >
+        KEYWORD,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="videoCd != null" >
+        #{videoCd,jdbcType=VARCHAR},
+      </if>
+      <if test="videoName != null" >
+        #{videoName,jdbcType=VARCHAR},
+      </if>
+      <if test="videoBrief != null" >
+        #{videoBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="videoFile != null" >
+        #{videoFile,jdbcType=VARCHAR},
+      </if>
+      <if test="videoAddress != null" >
+        #{videoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentKbn != null" >
+        #{paymentKbn,jdbcType=TINYINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="priceDiscount != null" >
+        #{priceDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="freeTime != null" >
+        #{freeTime,jdbcType=TINYINT},
+      </if>
+      <if test="bigIcon != null" >
+        #{bigIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="littleIcon != null" >
+        #{littleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="freeAddress != null" >
+        #{freeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="topFlag != null" >
+        #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Video_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.VideoInfo" >
+    update video_info
+    <set >
+      <if test="videoName != null" >
+        VIDEO_NAME = #{videoName,jdbcType=VARCHAR},
+      </if>
+      <if test="videoBrief != null" >
+        VIDEO_BRIEF = #{videoBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="videoFile != null" >
+        VIDEO_FILE = #{videoFile,jdbcType=VARCHAR},
+      </if>
+      <if test="videoAddress != null" >
+        VIDEO_ADDRESS = #{videoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentKbn != null" >
+        PAYMENT_KBN = #{paymentKbn,jdbcType=TINYINT},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="price == null" >
+        PRICE = null,
+      </if>
+      <if test="priceDiscount != null" >
+        PRICE_DISCOUNT = #{priceDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="freeTime != null" >
+        FREE_TIME = #{freeTime,jdbcType=TINYINT},
+      </if>
+      <if test="freeTime == null" >
+        FREE_TIME = null,
+      </if>
+      <if test="bigIcon != null" >
+        BIG_ICON = #{bigIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="littleIcon != null" >
+        LITTLE_ICON = #{littleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="freeAddress != null" >
+        FREE_ADDRESS = #{freeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        KEYWORD = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where VIDEO_CD = #{videoCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Video_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.VideoInfo" >
+    update video_info
+    set VIDEO_NAME = #{videoName,jdbcType=VARCHAR},
+      VIDEO_BRIEF = #{videoBrief,jdbcType=LONGVARCHAR},
+      VIDEO_FILE = #{videoFile,jdbcType=VARCHAR},
+      VIDEO_ADDRESS = #{videoAddress,jdbcType=VARCHAR},
+      PAYMENT_KBN = #{paymentKbn,jdbcType=TINYINT},
+      PRICE = #{price,jdbcType=DECIMAL},
+      PRICE_DISCOUNT = #{priceDiscount,jdbcType=DECIMAL},
+      FREE_TIME = #{freeTime,jdbcType=TINYINT},
+      BIG_ICON = #{bigIcon,jdbcType=VARCHAR},
+      LITTLE_ICON = #{littleIcon,jdbcType=VARCHAR},
+      FREE_ADDRESS = #{freeAddress,jdbcType=VARCHAR},
+      KEYWORD = #{keyword,jdbcType=VARCHAR},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where VIDEO_CD = #{videoCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据TopicFieldInfo查询Video_Info中指定记录-->
+  <select id="slideEditSearch" resultMap="BaseResultMap" parameterType="com.zzj.db.model.SlideResultVO" >
+  	select 
+    <include refid="Base_Column_List" />
+    from video_info
+    where
+    VIDEO_CD in (
+	    select TOPIC_CD 
+	    	from topic_field_info 
+	    where DELETE_FLAG = 0
+	    <if test="slideResultBusi != null" >
+	    and BUSI_TYPE = #{slideResultBusi,jdbcType=VARCHAR}
+	    </if>
+	    <if test="techField != 'null'" > 
+	    and TECH_FIELD_CD = #{techField,jdbcType=VARCHAR}
+	    </if>
+    ) 
+    <if test="slideResultTopic != null" >
+    and VIDEO_NAME like CONCAT('%',#{slideResultTopic,jdbcType=VARCHAR},'%')
+    </if>
+    and DELETE_FLAG = '0'
+  </select>
+</mapper>

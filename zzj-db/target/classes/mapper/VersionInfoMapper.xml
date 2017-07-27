@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.VersionInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.VersionInfo" >
+    <id column="APP_TYPE" property="appType" jdbcType="TINYINT" />
+    <id column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="VERSION_NO" property="versionNo" jdbcType="VARCHAR" />
+    <result column="VERSION_ADDRESS" property="versionAddress" jdbcType="VARCHAR" />
+    <result column="MODIFY_MEMO" property="modifyMemo" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    APP_TYPE, VERSION_NO, VERSION_ADDRESS, MODIFY_MEMO, DELETE_FLAG, CREATE_ID, CREATE_TIME
+  </sql>
+  <select id="selectByAppType" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from version_info
+    where APP_TYPE = #{appType,jdbcType=TINYINT} and DELETE_FLAG = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from version_info
+    where APP_TYPE = #{appType,jdbcType=TINYINT}
+  </delete>
+  <insert id="insert" parameterType="com.zzj.db.dto.VersionInfo" >
+    insert into version_info (APP_TYPE, VERSION_NO, VERSION_ADDRESS, MODIFY_MEMO,
+      DELETE_FLAG, CREATE_ID, CREATE_TIME
+      )
+    values (#{appType,jdbcType=TINYINT}, #{versionNo,jdbcType=VARCHAR}, #{versionAddress,jdbcType=VARCHAR}, #{modifyMemo,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.VersionInfo" >
+    insert into version_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="appType != null" >
+        APP_TYPE,
+      </if>
+      <if test="versionNo != null" >
+        VERSION_NO,
+      </if>
+      <if test="versionAddress != null" >
+        VERSION_ADDRESS,
+      </if>
+      <if test="modifyMemo != null" >
+        MODIFY_MEMO,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="appType != null" >
+        #{appType,jdbcType=TINYINT},
+      </if>
+      <if test="versionNo != null" >
+        #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="versionAddress != null" >
+        #{versionAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyMemo != null" >
+        #{modifyMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.VersionInfo" >
+    update version_info
+    <set >
+      <if test="versionNo != null" >
+        VERSION_NO = #{versionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="versionAddress != null" >
+        VERSION_ADDRESS = #{versionAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyMemo != null" >
+        MODIFY_MEMO = #{modifyMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where APP_TYPE = #{appType,jdbcType=TINYINT} and CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.VersionInfo" >
+    update version_info
+    set VERSION_NO = #{versionNo,jdbcType=VARCHAR},
+      VERSION_ADDRESS = #{versionAddress,jdbcType=VARCHAR},
+      MODIFY_MEMO = #{modifyMemo,jdbcType=VARCHAR},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR}
+    where APP_TYPE = #{appType,jdbcType=TINYINT} and CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+  </update>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.DemoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.Demo" >
+    <id column="a" property="a" jdbcType="INTEGER" />
+    <result column="b" property="b" jdbcType="TINYINT" />
+    <result column="c" property="c" jdbcType="DECIMAL" />
+    <result column="d" property="d" jdbcType="DECIMAL" />
+    <result column="e" property="e" jdbcType="DOUBLE" />
+    <result column="f" property="f" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    a, b, c, d, e, f
+  </sql>
+  <!--根据主键查询Demo中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from demo
+    where a = #{a,jdbcType=INTEGER}
+  </select>
+  <!--根据主键删除Demo中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from demo
+    where a = #{a,jdbcType=INTEGER}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.Demo" >
+    insert into demo (a, b, c, d, 
+      e, f)
+    values (#{a,jdbcType=INTEGER}, #{b,jdbcType=TINYINT}, #{c,jdbcType=DECIMAL}, #{d,jdbcType=DECIMAL}, 
+      #{e,jdbcType=DOUBLE}, #{f,jdbcType=VARCHAR})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.Demo" >
+    insert into demo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="a != null" >
+        a,
+      </if>
+      <if test="b != null" >
+        b,
+      </if>
+      <if test="c != null" >
+        c,
+      </if>
+      <if test="d != null" >
+        d,
+      </if>
+      <if test="e != null" >
+        e,
+      </if>
+      <if test="f != null" >
+        f,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="a != null" >
+        #{a,jdbcType=INTEGER},
+      </if>
+      <if test="b != null" >
+        #{b,jdbcType=TINYINT},
+      </if>
+      <if test="c != null" >
+        #{c,jdbcType=DECIMAL},
+      </if>
+      <if test="d != null" >
+        #{d,jdbcType=DECIMAL},
+      </if>
+      <if test="e != null" >
+        #{e,jdbcType=DOUBLE},
+      </if>
+      <if test="f != null" >
+        #{f,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Demo中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.Demo" >
+    update demo
+    <set >
+      <if test="b != null" >
+        b = #{b,jdbcType=TINYINT},
+      </if>
+      <if test="c != null" >
+        c = #{c,jdbcType=DECIMAL},
+      </if>
+      <if test="d != null" >
+        d = #{d,jdbcType=DECIMAL},
+      </if>
+      <if test="e != null" >
+        e = #{e,jdbcType=DOUBLE},
+      </if>
+      <if test="f != null" >
+        f = #{f,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where a = #{a,jdbcType=INTEGER}
+  </update>
+  <!--根据主键更新Demo中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.Demo" >
+    update demo
+    set b = #{b,jdbcType=TINYINT},
+      c = #{c,jdbcType=DECIMAL},
+      d = #{d,jdbcType=DECIMAL},
+      e = #{e,jdbcType=DOUBLE},
+      f = #{f,jdbcType=VARCHAR}
+    where a = #{a,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstPermissionInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstPermissionInfo" >
+    <id column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+    <result column="SCREEN_ID" property="screenId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    ROLE_ID, SCREEN_ID, UPDATE_TIME
+  </sql>
+  <!--根据主键查询Mst_Permission_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_permission_info
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </select>
+  <!--统计Mst_Permission_Info表中共有多少RoleId
+  <select id="selectByPrimaryKey" resultMap="java.lang.Integer">
+    select COUNT(DISTINCT(ROLE_ID)) from mst_permission_info
+  </select>
+  根据RoleId查询Mst_Permission_Info表中指定记录-->
+  <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_permission_info
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </select>
+  <!--查询Mst_Permission_Info表中全部记录-->
+  <select id="selectAllPermission" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mst_permission_info
+  </select>
+  <!--查询Mst_Permission_Info表中全部记录(对ROLE_ID去重复)-->
+  <select id="selectAllPermissionSelective" resultMap="BaseResultMap">
+  select
+  		distinct(ROLE_ID)
+  	from mst_permission_info
+  </select>
+  <!--根据主键删除Mst_Permission_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from mst_permission_info
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstPermissionInfo" >
+    insert into mst_permission_info (ROLE_ID, SCREEN_ID, UPDATE_TIME)
+    values (#{roleId,jdbcType=VARCHAR}, #{screenId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstPermissionInfo" >
+    insert into mst_permission_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="screenId != null" >
+        SCREEN_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="screenId != null" >
+        #{screenId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Mst_Permission_Info表中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstPermissionInfo" >
+    update mst_permission_info
+    <set >
+      <if test="screenId != null" >
+        SCREEN_ID = #{screenId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Mst_Permission_Info表中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstPermissionInfo" >
+    update mst_permission_info
+    set SCREEN_ID = #{screenId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ROLE_ID = #{roleId,jdbcType=VARCHAR}
+  </update>
+</mapper>

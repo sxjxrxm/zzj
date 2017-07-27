@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="false" context="gettercomment_context" deleted="false" description="Comment for getter method" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.gettercomment" name="gettercomment">/**
+ * 返回${bare_field_name}的值
+ * @return ${field_type} ${bare_field_name}的值
+ */</template><template autoinsert="false" context="settercomment_context" deleted="false" description="Comment for setter method" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.settercomment" name="settercomment">/**
+ * 设置${param}的值
+ * @param  ${param} ${param}的值
+ */</template><template autoinsert="false" context="constructorcomment_context" deleted="false" description="Comment for created constructors" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.constructorcomment" name="constructorcomment">/**
+ * 构造${enclosing_type}实例。&lt;br/&gt;
+ * @param  变量名，做什么用的
+ * @throws Exception
+ */
+</template><template autoinsert="false" context="filecomment_context" deleted="false" description="Comment for created Java files" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.filecomment" name="filecomment"/><template autoinsert="false" context="typecomment_context" deleted="false" description="Comment for created types" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.typecomment" name="typecomment"/><template autoinsert="false" context="fieldcomment_context" deleted="false" description="Comment for fields" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.fieldcomment" name="fieldcomment">/**
+ * ${field}:用一句话描述这个变量表示什么。
+ */</template><template autoinsert="false" context="methodcomment_context" deleted="false" description="Comment for non-overriding methods" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.methodcomment" name="methodcomment">/**
+ * 这里用一句话描述这个方法的作用。&lt;br/&gt;
+ * 描述这个方法适用条件 – 可选)。&lt;br/&gt;
+ * 描述这个方法的执行流程 – 可选)。&lt;br/&gt;
+ * 描述这个方法的使用方法 – 可选)。&lt;br/&gt;
+ * 描述这个方法的注意事项 – 可选)。&lt;br/&gt;
+ * @param  变量名，做什么用的
+ * @return 数据类型  代表业务逻辑意义，比如用户记录总条数
+ * @throws Exception
+ */</template><template autoinsert="false" context="overridecomment_context" deleted="false" description="Comment for overriding methods" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.overridecomment" name="overridecomment">/**
+ * 这里用一句话描述这个方法的作用。&lt;br/&gt;
+ * 描述这个方法适用条件 – 可选)。&lt;br/&gt;
+ * 描述这个方法的执行流程 – 可选)。&lt;br/&gt;
+ * 描述这个方法的使用方法 – 可选)。&lt;br/&gt;
+ * 描述这个方法的注意事项 – 可选)。&lt;br/&gt;
+ * @param  变量名，做什么用的
+ * @return 数据类型  代表业务逻辑意义，比如用户记录总条数
+ * @throws Exception
+ */</template><template autoinsert="false" context="delegatecomment_context" deleted="false" description="Comment for delegate methods" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.delegatecomment" name="delegatecomment">/**
+ * 这里用一句话描述这个方法的作用。&lt;br/&gt;
+ * 描述这个方法适用条件 – 可选)。&lt;br/&gt;
+ * 描述这个方法的执行流程 – 可选)。&lt;br/&gt;
+ * 描述这个方法的使用方法 – 可选)。&lt;br/&gt;
+ * 描述这个方法的注意事项 – 可选)。&lt;br/&gt;
+ * @param  变量名，做什么用的
+ * @return 数据类型  代表业务逻辑意义，比如用户记录总条数
+ * @throws Exception
+ */</template><template autoinsert="false" context="newtype_context" deleted="false" description="Newly created files" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.newtype" name="newtype">/**
+ * Project Name:${project_name}
+ * File Name:${file_name}
+ * Package Name:${package_name}
+ * Copyright © 北京云物移大智信息技术有限公司  All Rights Reserved.
+*/
+${filecomment}
+
+${package_declaration}
+/**
+ * &lt;p&gt;&lt;strong&gt;类名: &lt;/strong&gt;&lt;/p&gt;${type_name} &lt;br/&gt;
+ * &lt;p&gt;&lt;strong&gt;功能说明: &lt;/strong&gt;&lt;/p&gt;这个类是封装那个哪个模块，起什么用的，需要手动填写. &lt;br/&gt;
+ * &lt;p&gt;&lt;strong&gt;创建日期: &lt;/strong&gt;&lt;br/&gt;&lt;/p&gt;${date}${time} &lt;br/&gt;
+ * @author   康冠雄
+ * @version  1.0
+ * @since    JDK 1.8	 
+ */
+${typecomment}
+${type_declaration}
+</template><template autoinsert="true" context="classbody_context" deleted="false" description="Code in new class type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.classbody" name="classbody">
+</template><template autoinsert="true" context="interfacebody_context" deleted="false" description="Code in new interface type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.interfacebody" name="interfacebody">
+</template><template autoinsert="true" context="enumbody_context" deleted="false" description="Code in new enum type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.enumbody" name="enumbody">
+</template><template autoinsert="true" context="annotationbody_context" deleted="false" description="Code in new annotation type bodies" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.annotationbody" name="annotationbody">
+</template><template autoinsert="true" context="catchblock_context" deleted="false" description="Code in new catch blocks" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.catchblock" name="catchblock">
+// ${todo} Auto-generated catch block
+${exception_var}.printStackTrace();
+</template><template autoinsert="false" context="methodbody_context" deleted="false" description="Code in created method stubs" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.methodbody" name="methodbody">
+// ${todo} Auto-generated method stub
+${body_statement}</template><template autoinsert="true" context="constructorbody_context" deleted="false" description="Code in created constructor stubs" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.constructorbody" name="constructorbody">
+${body_statement}
+// ${todo} Auto-generated constructor stub
+</template><template autoinsert="true" context="getterbody_context" deleted="false" description="Code in created getters" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.getterbody" name="getterbody">return ${field};</template><template autoinsert="true" context="setterbody_context" deleted="false" description="Code in created setters" enabled="true" id="org.eclipse.jdt.ui.text.codetemplates.setterbody" name="setterbody">${field} = ${param};</template></templates>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MsgImageMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MsgImage" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MID" property="mid" jdbcType="BIGINT" />
+    <result column="UUID" property="uuid" jdbcType="VARCHAR" />
+    <result column="IMAGEFORMAT" property="imageformat" jdbcType="INTEGER" />
+    <result column="ORIGINAL_SIZE" property="originalSize" jdbcType="INTEGER" />
+    <result column="ORIGINAL_WIDTH" property="originalWidth" jdbcType="INTEGER" />
+    <result column="ORIGINAL_HEIGHT" property="originalHeight" jdbcType="INTEGER" />
+    <result column="ORIGINAL_URL" property="originalUrl" jdbcType="VARCHAR" />
+    <result column="BIG_SIZE" property="bigSize" jdbcType="INTEGER" />
+    <result column="BIG_WIDTH" property="bigWidth" jdbcType="INTEGER" />
+    <result column="BIG_HEIGHT" property="bigHeight" jdbcType="INTEGER" />
+    <result column="BIG_URL" property="bigUrl" jdbcType="VARCHAR" />
+    <result column="SMALL_SIZE" property="smallSize" jdbcType="INTEGER" />
+    <result column="SMALL_WIDTH" property="smallWidth" jdbcType="INTEGER" />
+    <result column="SMALL_HEIGHT" property="smallHeight" jdbcType="INTEGER" />
+    <result column="SMALL_URL" property="smallUrl" jdbcType="VARCHAR" />
+    <result column="MSG_SEQ" property="msgSeq" jdbcType="INTEGER" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    ID, MID, UUID, IMAGEFORMAT, ORIGINAL_SIZE, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, ORIGINAL_URL, 
+    BIG_SIZE, BIG_WIDTH, BIG_HEIGHT, BIG_URL, SMALL_SIZE, SMALL_WIDTH, SMALL_HEIGHT, 
+    SMALL_URL, MSG_SEQ
+  </sql>
+  <!--根据主键查询msg_image中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from msg_image
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <!--根据MID查询msg_image中指定记录-->
+  <select id="selectByMid" resultType="com.zzj.db.model.CourseMsgVO" parameterType="java.lang.Long" >
+    select 
+    ID, MID, UUID, IMAGEFORMAT, ORIGINAL_SIZE, ORIGINAL_WIDTH, ORIGINAL_HEIGHT, ORIGINAL_URL, 
+    BIG_SIZE, BIG_WIDTH, BIG_HEIGHT, BIG_URL, SMALL_SIZE, SMALL_WIDTH, SMALL_HEIGHT, 
+    SMALL_URL as smallUrl, MSG_SEQ as msgSeq, 1 as msgType
+    from msg_image
+    where MID = #{mid,jdbcType=BIGINT}
+  </select>
+  <!--根据主键删除msg_image中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from msg_image
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MsgImage" >
+    insert into msg_image (ID, MID, UUID, 
+      IMAGEFORMAT, ORIGINAL_SIZE, ORIGINAL_WIDTH, 
+      ORIGINAL_HEIGHT, ORIGINAL_URL, BIG_SIZE, 
+      BIG_WIDTH, BIG_HEIGHT, BIG_URL, 
+      SMALL_SIZE, SMALL_WIDTH, SMALL_HEIGHT, 
+      SMALL_URL, MSG_SEQ)
+    values (#{id,jdbcType=BIGINT}, #{mid,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, 
+      #{imageformat,jdbcType=INTEGER}, #{originalSize,jdbcType=INTEGER}, #{originalWidth,jdbcType=INTEGER}, 
+      #{originalHeight,jdbcType=INTEGER}, #{originalUrl,jdbcType=VARCHAR}, #{bigSize,jdbcType=INTEGER}, 
+      #{bigWidth,jdbcType=INTEGER}, #{bigHeight,jdbcType=INTEGER}, #{bigUrl,jdbcType=VARCHAR}, 
+      #{smallSize,jdbcType=INTEGER}, #{smallWidth,jdbcType=INTEGER}, #{smallHeight,jdbcType=INTEGER}, 
+      #{smallUrl,jdbcType=VARCHAR}, #{msgSeq,jdbcType=INTEGER})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MsgImage" >
+    insert into msg_image
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="mid != null" >
+        MID,
+      </if>
+      <if test="uuid != null" >
+        UUID,
+      </if>
+      <if test="imageformat != null" >
+        IMAGEFORMAT,
+      </if>
+      <if test="originalSize != null" >
+        ORIGINAL_SIZE,
+      </if>
+      <if test="originalWidth != null" >
+        ORIGINAL_WIDTH,
+      </if>
+      <if test="originalHeight != null" >
+        ORIGINAL_HEIGHT,
+      </if>
+      <if test="originalUrl != null" >
+        ORIGINAL_URL,
+      </if>
+      <if test="bigSize != null" >
+        BIG_SIZE,
+      </if>
+      <if test="bigWidth != null" >
+        BIG_WIDTH,
+      </if>
+      <if test="bigHeight != null" >
+        BIG_HEIGHT,
+      </if>
+      <if test="bigUrl != null" >
+        BIG_URL,
+      </if>
+      <if test="smallSize != null" >
+        SMALL_SIZE,
+      </if>
+      <if test="smallWidth != null" >
+        SMALL_WIDTH,
+      </if>
+      <if test="smallHeight != null" >
+        SMALL_HEIGHT,
+      </if>
+      <if test="smallUrl != null" >
+        SMALL_URL,
+      </if>
+      <if test="msgSeq != null" >
+        MSG_SEQ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=BIGINT},
+      </if>
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageformat != null" >
+        #{imageformat,jdbcType=INTEGER},
+      </if>
+      <if test="originalSize != null" >
+        #{originalSize,jdbcType=INTEGER},
+      </if>
+      <if test="originalWidth != null" >
+        #{originalWidth,jdbcType=INTEGER},
+      </if>
+      <if test="originalHeight != null" >
+        #{originalHeight,jdbcType=INTEGER},
+      </if>
+      <if test="originalUrl != null" >
+        #{originalUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="bigSize != null" >
+        #{bigSize,jdbcType=INTEGER},
+      </if>
+      <if test="bigWidth != null" >
+        #{bigWidth,jdbcType=INTEGER},
+      </if>
+      <if test="bigHeight != null" >
+        #{bigHeight,jdbcType=INTEGER},
+      </if>
+      <if test="bigUrl != null" >
+        #{bigUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="smallSize != null" >
+        #{smallSize,jdbcType=INTEGER},
+      </if>
+      <if test="smallWidth != null" >
+        #{smallWidth,jdbcType=INTEGER},
+      </if>
+      <if test="smallHeight != null" >
+        #{smallHeight,jdbcType=INTEGER},
+      </if>
+      <if test="smallUrl != null" >
+        #{smallUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSeq != null" >
+        #{msgSeq,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新msg_image中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MsgImage" >
+    update msg_image
+    <set >
+      <if test="mid != null" >
+        MID = #{mid,jdbcType=BIGINT},
+      </if>
+      <if test="uuid != null" >
+        UUID = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageformat != null" >
+        IMAGEFORMAT = #{imageformat,jdbcType=INTEGER},
+      </if>
+      <if test="originalSize != null" >
+        ORIGINAL_SIZE = #{originalSize,jdbcType=INTEGER},
+      </if>
+      <if test="originalWidth != null" >
+        ORIGINAL_WIDTH = #{originalWidth,jdbcType=INTEGER},
+      </if>
+      <if test="originalHeight != null" >
+        ORIGINAL_HEIGHT = #{originalHeight,jdbcType=INTEGER},
+      </if>
+      <if test="originalUrl != null" >
+        ORIGINAL_URL = #{originalUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="bigSize != null" >
+        BIG_SIZE = #{bigSize,jdbcType=INTEGER},
+      </if>
+      <if test="bigWidth != null" >
+        BIG_WIDTH = #{bigWidth,jdbcType=INTEGER},
+      </if>
+      <if test="bigHeight != null" >
+        BIG_HEIGHT = #{bigHeight,jdbcType=INTEGER},
+      </if>
+      <if test="bigUrl != null" >
+        BIG_URL = #{bigUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="smallSize != null" >
+        SMALL_SIZE = #{smallSize,jdbcType=INTEGER},
+      </if>
+      <if test="smallWidth != null" >
+        SMALL_WIDTH = #{smallWidth,jdbcType=INTEGER},
+      </if>
+      <if test="smallHeight != null" >
+        SMALL_HEIGHT = #{smallHeight,jdbcType=INTEGER},
+      </if>
+      <if test="smallUrl != null" >
+        SMALL_URL = #{smallUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSeq != null" >
+        MSG_SEQ = #{msgSeq,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <!--根据主键更新msg_image中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MsgImage" >
+    update msg_image
+    set MID = #{mid,jdbcType=BIGINT},
+      UUID = #{uuid,jdbcType=VARCHAR},
+      IMAGEFORMAT = #{imageformat,jdbcType=INTEGER},
+      ORIGINAL_SIZE = #{originalSize,jdbcType=INTEGER},
+      ORIGINAL_WIDTH = #{originalWidth,jdbcType=INTEGER},
+      ORIGINAL_HEIGHT = #{originalHeight,jdbcType=INTEGER},
+      ORIGINAL_URL = #{originalUrl,jdbcType=VARCHAR},
+      BIG_SIZE = #{bigSize,jdbcType=INTEGER},
+      BIG_WIDTH = #{bigWidth,jdbcType=INTEGER},
+      BIG_HEIGHT = #{bigHeight,jdbcType=INTEGER},
+      BIG_URL = #{bigUrl,jdbcType=VARCHAR},
+      SMALL_SIZE = #{smallSize,jdbcType=INTEGER},
+      SMALL_WIDTH = #{smallWidth,jdbcType=INTEGER},
+      SMALL_HEIGHT = #{smallHeight,jdbcType=INTEGER},
+      SMALL_URL = #{smallUrl,jdbcType=VARCHAR},
+      MSG_SEQ = #{msgSeq,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

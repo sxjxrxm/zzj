@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.RecommendInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.RecommendInfo" >
+    <id column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <id column="RECOMMEND_KBN" property="recommendKbn" jdbcType="TINYINT" />
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <result column="SORT_NO" property="sortNo" jdbcType="TINYINT" />
+    <result column="RECOMMEND_MEMO" property="recommendMemo" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="RecommendResultMap" type="com.zzj.db.dto.RecommendInfoKey" >
+    <id column="RECOMMEND_KBN" property="recommendKbn" jdbcType="TINYINT" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    BUSI_TYPE, RECOMMEND_KBN, TOPIC_CD, SORT_NO, RECOMMEND_MEMO, DELETE_FLAG, UPDATE_ID, 
+    UPDATE_TIME
+  </sql>
+  <!--根据业务分类和主题编号查询Recommend_Info表中指定记录-->
+  <select id="selectByTypeAndCode" resultMap="RecommendResultMap" parameterType="map" >
+    select 
+    	RECOMMEND_KBN
+    from recommend_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and DELETE_FLAG = 0
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+    order by RECOMMEND_KBN
+  </select>
+  <!--根据业务分类和主题编号查询Recommend_Info表中推荐语-->
+  <select id="findRecommendMsgByTypeAndCode" resultType="string" parameterType="map" >
+    select 
+    	RECOMMEND_MEMO
+    from recommend_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and DELETE_FLAG = 0
+      and RECOMMEND_KBN = 1
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据RecommendMsg查询Recommend_Info表中指定记录-->
+  <select id="selectRecommendMsg" resultType="string" parameterType="com.zzj.db.dto.RecommendInfoKey" >
+    select
+    	ifnull(RECOMMEND_MEMO, "")
+    from recommend_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+      and RECOMMEND_KBN = 1
+    order by UPDATE_TIME
+    limit 1
+  </select>
+  <!--根据主键查询Recommend_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.RecommendInfoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from recommend_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and RECOMMEND_KBN = #{recommendKbn,jdbcType=TINYINT}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键查询Recommend_Info表中指定记录数-->
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.zzj.db.dto.RecommendInfoKey" >
+    select 
+        count(*)
+    from recommend_info r
+    <if test="busiType == '01'" >
+         inner join EXPERT_INFO info on info.EXPERT_ID = r.TOPIC_CD and info.DELETE_FLAG = 0
+    </if>
+    <if test="busiType == '02'" >
+         inner join NEWS_INFO info on info.NEWS_CD = r.TOPIC_CD and info.DELETE_FLAG = 0
+    </if>
+    <if test="busiType == '03'" >
+         inner join VIDEO_INFO info on info.VIDEO_CD = r.TOPIC_CD and info.DELETE_FLAG = 0
+    </if>
+    <if test="busiType == '04'" >
+         inner join COURSE_INFO info on info.COURSE_CD = r.TOPIC_CD and info.DELETE_FLAG = 0
+    </if>
+    <if test="busiType == '05'" >
+         inner join QUESTION_INFO info on info.QUESTION_CD = r.TOPIC_CD and info.DELETE_FLAG = 0
+    </if>
+    <if test="busiType == '06'" >
+         inner join NEEDS_INFO info on info.NEEDS_CD = r.TOPIC_CD and info.DELETE_FLAG = 0
+    </if>
+    where r.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and  r.RECOMMEND_KBN = #{recommendKbn,jdbcType=TINYINT}
+      and  r.DELETE_FLAG = '0'
+  </select>
+  <!--根据主键删除Recommend_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="com.zzj.db.dto.RecommendInfoKey" >
+    delete from recommend_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and RECOMMEND_KBN = #{recommendKbn,jdbcType=TINYINT}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.RecommendInfo" >
+    insert into recommend_info (BUSI_TYPE, RECOMMEND_KBN, TOPIC_CD, 
+      SORT_NO, RECOMMEND_MEMO, DELETE_FLAG, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{busiType,jdbcType=VARCHAR}, #{recommendKbn,jdbcType=TINYINT}, #{topicCd,jdbcType=VARCHAR}, 
+      #{sortNo,jdbcType=TINYINT}, #{recommendMemo,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=TINYINT}, 
+      #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.RecommendInfo" >
+    insert into recommend_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="busiType != null" >
+        BUSI_TYPE,
+      </if>
+      <if test="recommendKbn != null" >
+        RECOMMEND_KBN,
+      </if>
+      <if test="topicCd != null" >
+        TOPIC_CD,
+      </if>
+      <if test="sortNo != null" >
+        SORT_NO,
+      </if>
+      <if test="recommendMemo != null" >
+        RECOMMEND_MEMO,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="busiType != null" >
+        #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendKbn != null" >
+        #{recommendKbn,jdbcType=TINYINT},
+      </if>
+      <if test="topicCd != null" >
+        #{topicCd,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=TINYINT},
+      </if>
+      <if test="recommendMemo != null" >
+        #{recommendMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Recommend_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.RecommendInfo" >
+    update recommend_info
+    <set >
+      <if test="sortNo != null" >
+        SORT_NO = #{sortNo,jdbcType=TINYINT},
+      </if>
+      <if test="recommendMemo != null" >
+        RECOMMEND_MEMO = #{recommendMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and RECOMMEND_KBN = #{recommendKbn,jdbcType=TINYINT}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Recommend_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.RecommendInfo" >
+    update recommend_info
+    set SORT_NO = #{sortNo,jdbcType=TINYINT},
+      RECOMMEND_MEMO = #{recommendMemo,jdbcType=VARCHAR},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and RECOMMEND_KBN = #{recommendKbn,jdbcType=TINYINT}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据业务分类和主题编号删除Recommend_Info表中指定记录-->
+  <update id="updateByTypeAndCode" parameterType="com.zzj.db.dto.RecommendInfo" >
+    update recommend_info
+    set 
+      DELETE_FLAG = 1,
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据业务分类和推荐置顶查询Recommend_Info表中指定记录-->
+  <select id="selectByRecommendKbnAndBusi" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.RecommendInfo" >
+    select 
+    	<include refid="Base_Column_List" />
+    from recommend_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and DELETE_FLAG = 0
+      and RECOMMEND_KBN = #{recommendKbn,jdbcType=TINYINT}
+    ORDER BY SORT_NO ASC
+  </select>
+</mapper>

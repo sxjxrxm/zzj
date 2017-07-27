@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstAreaInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstAreaInfo" >
+    <id column="REGION_ID" property="regionId" jdbcType="DOUBLE" />
+    <result column="REGION_CODE" property="regionCode" jdbcType="VARCHAR" />
+    <result column="REGION_NAME" property="regionName" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="DOUBLE" />
+    <result column="REGION_LEVEL" property="regionLevel" jdbcType="DOUBLE" />
+    <result column="REGION_ORDER" property="regionOrder" jdbcType="DOUBLE" />
+    <result column="REGION_NAME_EN" property="regionNameEn" jdbcType="VARCHAR" />
+    <result column="REGION_SHORTNAME_EN" property="regionShortnameEn" jdbcType="VARCHAR" />
+    <result column="POSTCODE" property="postcode" jdbcType="VARCHAR" />
+    <result column="TEL_AREA_CODE" property="telAreaCode" jdbcType="VARCHAR" />
+    <result column="PHONE_LENGTH" property="phoneLength" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="CityResultMap" type="com.zzj.db.dto.MstAreaInfo" >
+    <result column="REGION_CODE" property="regionCode" jdbcType="VARCHAR" />
+    <result column="REGION_NAME" property="regionName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 专家编辑/添加页面使用的数据结构 -->
+  <sql id="Base_Column_List" >
+    REGION_ID, REGION_CODE, REGION_NAME, PARENT_ID, REGION_LEVEL, REGION_ORDER, REGION_NAME_EN, 
+    REGION_SHORTNAME_EN, POSTCODE, TEL_AREA_CODE, PHONE_LENGTH
+  </sql>
+   <!--根据主键查询mst_area_info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Double" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_area_info
+    where REGION_ID = #{regionId,jdbcType=DOUBLE}
+  </select>
+   <!--查找所有市级信息（parentId不为0或1），专家编辑页面使用**********-->
+  <select id="selectAllCity" resultMap="CityResultMap">
+    select 
+    REGION_CODE, REGION_NAME
+    from mst_area_info
+    where PARENT_ID not in (0,1)
+  </select>
+   <!--根据parentId显示城市信息，专家编辑页面使用**********-->
+  <select id="selectAllByParentId" resultMap="CityResultMap" parameterType="java.lang.Double">
+    select 
+    REGION_CODE, REGION_NAME
+    from mst_area_info
+    where PARENT_ID = #{parentId,jdbcType=DOUBLE}
+    order by REGION_ID
+  </select>
+   <!--根据区域代码获得区域id，专家编辑页面使用**********-->
+  <select id="selectRegionIdByRegionCode" resultType="double" parameterType="string">
+    select 
+    REGION_ID
+    from mst_area_info
+    where REGION_CODE = #{regionCode,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除mst_area_info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Double" >
+    delete from mst_area_info
+    where REGION_ID = #{regionId,jdbcType=DOUBLE}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstAreaInfo" >
+    insert into mst_area_info (REGION_ID, REGION_CODE, REGION_NAME, 
+      PARENT_ID, REGION_LEVEL, REGION_ORDER, 
+      REGION_NAME_EN, REGION_SHORTNAME_EN, POSTCODE, 
+      TEL_AREA_CODE, PHONE_LENGTH)
+    values (#{regionId,jdbcType=DOUBLE}, #{regionCode,jdbcType=VARCHAR}, #{regionName,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=DOUBLE}, #{regionLevel,jdbcType=DOUBLE}, #{regionOrder,jdbcType=DOUBLE}, 
+      #{regionNameEn,jdbcType=VARCHAR}, #{regionShortnameEn,jdbcType=VARCHAR}, #{postcode,jdbcType=VARCHAR}, 
+      #{telAreaCode,jdbcType=VARCHAR}, #{phoneLength,jdbcType=INTEGER})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstAreaInfo" >
+    insert into mst_area_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="regionId != null" >
+        REGION_ID,
+      </if>
+      <if test="regionCode != null" >
+        REGION_CODE,
+      </if>
+      <if test="regionName != null" >
+        REGION_NAME,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="regionLevel != null" >
+        REGION_LEVEL,
+      </if>
+      <if test="regionOrder != null" >
+        REGION_ORDER,
+      </if>
+      <if test="regionNameEn != null" >
+        REGION_NAME_EN,
+      </if>
+      <if test="regionShortnameEn != null" >
+        REGION_SHORTNAME_EN,
+      </if>
+      <if test="postcode != null" >
+        POSTCODE,
+      </if>
+      <if test="telAreaCode != null" >
+        TEL_AREA_CODE,
+      </if>
+      <if test="phoneLength != null" >
+        PHONE_LENGTH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="regionId != null" >
+        #{regionId,jdbcType=DOUBLE},
+      </if>
+      <if test="regionCode != null" >
+        #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null" >
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=DOUBLE},
+      </if>
+      <if test="regionLevel != null" >
+        #{regionLevel,jdbcType=DOUBLE},
+      </if>
+      <if test="regionOrder != null" >
+        #{regionOrder,jdbcType=DOUBLE},
+      </if>
+      <if test="regionNameEn != null" >
+        #{regionNameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="regionShortnameEn != null" >
+        #{regionShortnameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="telAreaCode != null" >
+        #{telAreaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneLength != null" >
+        #{phoneLength,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新mst_area_info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstAreaInfo" >
+    update mst_area_info
+    <set >
+      <if test="regionCode != null" >
+        REGION_CODE = #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null" >
+        REGION_NAME = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=DOUBLE},
+      </if>
+      <if test="regionLevel != null" >
+        REGION_LEVEL = #{regionLevel,jdbcType=DOUBLE},
+      </if>
+      <if test="regionOrder != null" >
+        REGION_ORDER = #{regionOrder,jdbcType=DOUBLE},
+      </if>
+      <if test="regionNameEn != null" >
+        REGION_NAME_EN = #{regionNameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="regionShortnameEn != null" >
+        REGION_SHORTNAME_EN = #{regionShortnameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        POSTCODE = #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="telAreaCode != null" >
+        TEL_AREA_CODE = #{telAreaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneLength != null" >
+        PHONE_LENGTH = #{phoneLength,jdbcType=INTEGER},
+      </if>
+    </set>
+    where REGION_ID = #{regionId,jdbcType=DOUBLE}
+  </update>
+  <!--根据主键更新mst_area_info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstAreaInfo" >
+    update mst_area_info
+    set REGION_CODE = #{regionCode,jdbcType=VARCHAR},
+      REGION_NAME = #{regionName,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=DOUBLE},
+      REGION_LEVEL = #{regionLevel,jdbcType=DOUBLE},
+      REGION_ORDER = #{regionOrder,jdbcType=DOUBLE},
+      REGION_NAME_EN = #{regionNameEn,jdbcType=VARCHAR},
+      REGION_SHORTNAME_EN = #{regionShortnameEn,jdbcType=VARCHAR},
+      POSTCODE = #{postcode,jdbcType=VARCHAR},
+      TEL_AREA_CODE = #{telAreaCode,jdbcType=VARCHAR},
+      PHONE_LENGTH = #{phoneLength,jdbcType=INTEGER}
+    where REGION_ID = #{regionId,jdbcType=DOUBLE}
+  </update>
+</mapper>

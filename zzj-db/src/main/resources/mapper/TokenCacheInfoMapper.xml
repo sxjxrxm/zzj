@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.TokenCacheInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.TokenCacheInfo" >
+    <id column="token_id" property="tokenId" jdbcType="VARCHAR" />
+    <result column="cache_type" property="cacheType" jdbcType="TINYINT" />
+    <result column="phone_no" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    token_id, cache_type, phone_no, user_id, create_time
+  </sql>
+  <!--根据主键查询指定记录-->
+  <select id="selectUserSig" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.TokenCacheInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from token_cache_info
+    where user_id = #{userId, jdbcType=VARCHAR}
+      and cache_type = #{cacheType, jdbcType=TINYINT}
+      and create_time >= date_add(now(), interval -#{dayNum,jdbcType=TINYINT} day)
+  </select>
+  <!--根据条件查询指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from token_cache_info
+    where token_id = #{tokenId,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from token_cache_info
+    where token_id = #{tokenId,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.TokenCacheInfo" >
+    insert into token_cache_info (token_id, cache_type, phone_no, 
+      user_id, create_time)
+    values (#{tokenId,jdbcType=VARCHAR}, #{cacheType,jdbcType=BIT}, #{phoneNo,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.TokenCacheInfo" >
+    insert into token_cache_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tokenId != null" >
+        token_id,
+      </if>
+      <if test="cacheType != null" >
+        cache_type,
+      </if>
+      <if test="phoneNo != null" >
+        phone_no,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+        create_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tokenId != null" >
+        #{tokenId,jdbcType=VARCHAR},
+      </if>
+      <if test="cacheType != null" >
+        #{cacheType,jdbcType=BIT},
+      </if>
+      <if test="phoneNo != null" >
+        #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+        now()
+    </trim>
+  </insert>
+  <!--根据条件更新指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.TokenCacheInfo" >
+    update token_cache_info
+    <set >
+      <if test="cacheType != null" >
+        cache_type = #{cacheType,jdbcType=BIT},
+      </if>
+      <if test="phoneNo != null" >
+        phone_no = #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where token_id = #{tokenId,jdbcType=VARCHAR}
+  </update>
+  <!--根据条件更新指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.TokenCacheInfo" >
+    update token_cache_info
+    set cache_type = #{cacheType,jdbcType=BIT},
+      phone_no = #{phoneNo,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where token_id = #{tokenId,jdbcType=VARCHAR}
+  </update>
+  <select id="selectCacheByUserIdAndType" resultType="java.lang.String" parameterType="java.util.Map" >
+    select 
+    	case when TIMESTAMPDIFF(DAY, create_time, now()) &lt; #{timeOut} then token_id
+    	else null end
+    from 
+    	token_cache_info
+    where 
+    	user_id = #{userId,jdbcType=VARCHAR}
+    and
+    	cache_type = #{cacheType,jdbcType=TINYINT}
+    order by
+    	create_time desc
+    limit 1
+  </select>
+</mapper>

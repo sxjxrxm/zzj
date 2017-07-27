@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstSequenceInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstSequenceInfo" >
+    <id column="SEQUENCE_TYPE" property="sequenceType" jdbcType="VARCHAR" />
+    <result column="SEQUENCE_TYPE_NAME" property="sequenceTypeName" jdbcType="VARCHAR" />
+    <result column="MIN_NO" property="minNo" jdbcType="DECIMAL" />
+    <result column="MAX_NO" property="maxNo" jdbcType="DECIMAL" />
+    <result column="NOW_NO" property="nowNo" jdbcType="DECIMAL" />
+    <result column="HEADER_STR" property="headerStr" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="NEXT_NO" property="nextNo" jdbcType="DECIMAL" />
+    <result column="keySq" property="keySq" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 专家编辑/添加页面使用的数据结构 -->
+  <sql id="Base_Column_List" >
+    SEQUENCE_TYPE, SEQUENCE_TYPE_NAME, MIN_NO, MAX_NO, NOW_NO, HEADER_STR, UPDATE_TIME
+  </sql>
+  <!--根据主键查找指定记录 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	select
+  		sq.*,
+  		CONCAT(sq.HEADER_STR, LPAD((sq.NEXT_NO), LENGTH(sq.MAX_NO), '0')) keySq
+  	from (
+    select 
+	    <include refid="Base_Column_List" />
+	    ,case 
+	      WHEN NOW_NO &lt; MIN_NO THEN MIN_NO
+	      WHEN NOW_NO &gt;= MAX_NO THEN MIN_NO
+	      ELSE NOW_NO + 1
+	    END NEXT_NO
+    from mst_sequence_info
+    where SEQUENCE_TYPE = #{sequenceType,jdbcType=VARCHAR}
+    ) sq
+  </select>
+  <!--删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from mst_sequence_info
+    where SEQUENCE_TYPE = #{sequenceType,jdbcType=VARCHAR}
+  </delete>
+  <!--插入记录 -->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstSequenceInfo" >
+    insert into mst_sequence_info (SEQUENCE_TYPE, SEQUENCE_TYPE_NAME, MIN_NO, 
+      MAX_NO, NOW_NO, HEADER_STR, 
+      UPDATE_TIME)
+    values (#{sequenceType,jdbcType=VARCHAR}, #{sequenceTypeName,jdbcType=VARCHAR}, #{minNo,jdbcType=DECIMAL}, 
+      #{maxNo,jdbcType=DECIMAL}, #{nowNo,jdbcType=DECIMAL}, #{headerStr,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--插入记录 -->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstSequenceInfo" >
+    insert into mst_sequence_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sequenceType != null" >
+        SEQUENCE_TYPE,
+      </if>
+      <if test="sequenceTypeName != null" >
+        SEQUENCE_TYPE_NAME,
+      </if>
+      <if test="minNo != null" >
+        MIN_NO,
+      </if>
+      <if test="maxNo != null" >
+        MAX_NO,
+      </if>
+      <if test="nowNo != null" >
+        NOW_NO,
+      </if>
+      <if test="headerStr != null" >
+        HEADER_STR,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sequenceType != null" >
+        #{sequenceType,jdbcType=VARCHAR},
+      </if>
+      <if test="sequenceTypeName != null" >
+        #{sequenceTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="minNo != null" >
+        #{minNo,jdbcType=DECIMAL},
+      </if>
+      <if test="maxNo != null" >
+        #{maxNo,jdbcType=DECIMAL},
+      </if>
+      <if test="nowNo != null" >
+        #{nowNo,jdbcType=DECIMAL},
+      </if>
+      <if test="headerStr != null" >
+        #{headerStr,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--更新记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstSequenceInfo" >
+    update mst_sequence_info
+    <set >
+      <if test="sequenceTypeName != null" >
+        SEQUENCE_TYPE_NAME = #{sequenceTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="minNo != null" >
+        MIN_NO = #{minNo,jdbcType=DECIMAL},
+      </if>
+      <if test="maxNo != null" >
+        MAX_NO = #{maxNo,jdbcType=DECIMAL},
+      </if>
+      <if test="nowNo != null" >
+        NOW_NO = #{nowNo,jdbcType=DECIMAL},
+      </if>
+      <if test="headerStr != null" >
+        HEADER_STR = #{headerStr,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SEQUENCE_TYPE = #{sequenceType,jdbcType=VARCHAR}
+  </update>
+  <!--更新记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstSequenceInfo" >
+    update mst_sequence_info
+    set SEQUENCE_TYPE_NAME = #{sequenceTypeName,jdbcType=VARCHAR},
+      MIN_NO = #{minNo,jdbcType=DECIMAL},
+      MAX_NO = #{maxNo,jdbcType=DECIMAL},
+      NOW_NO = #{nowNo,jdbcType=DECIMAL},
+      HEADER_STR = #{headerStr,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where SEQUENCE_TYPE = #{sequenceType,jdbcType=VARCHAR}
+  </update>
+</mapper>

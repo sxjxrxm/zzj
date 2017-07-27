@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.NeedsInfoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.NeedsInfo" >
+    <id column="NEEDS_CD" property="needsCd" jdbcType="VARCHAR" />
+    <result column="NEEDS_NAME" property="needsName" jdbcType="VARCHAR" />
+    <result column="NEEDS_CONTENT" property="needsContent" jdbcType="VARCHAR" />
+    <result column="NEEDS_TYPE" property="needsType" jdbcType="TINYINT" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyWord" jdbcType="VARCHAR" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 查询结果数据结构定义 -->
+  <resultMap id="NeedsInfoVO" type="com.zzj.db.model.NeedsInfoVO" >
+    <id column="NEEDS_CD" property="needsCd" jdbcType="VARCHAR" />
+    <result column="NEEDS_NAME" property="needsName" jdbcType="VARCHAR" />
+    <result column="NEEDS_CONTENT" property="needsContent" jdbcType="VARCHAR" />
+    <result column="NEEDS_TYPE" property="needsType" jdbcType="TINYINT" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="KEYWORD" property="keyWord" jdbcType="VARCHAR" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="answer" property="answer" jdbcType="TINYINT" />
+    <result column="needsTypeDisp" property="needsTypeDisp" jdbcType="VARCHAR" />
+    <result column="statusDisp" property="statusDisp" jdbcType="VARCHAR" />
+    <result column="answerDisp" property="answerDisp" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    NEEDS_CD, NEEDS_NAME, NEEDS_CONTENT, NEEDS_TYPE, STATUS, AUDIT_ID, AUDIT_TIME, REFUSE_MEMO,
+    KEYWORD, TOP_FLAG, DELETE_FLAG, CREATE_ID, CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <!--根据主键查询记录-->
+  <select id="selectByPrimaryKey" resultMap="NeedsInfoVO" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from needs_info
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+    and DELETE_FLAG = 0
+  </select>
+  <!--根据条件查询记录-->
+  <select id="selectAll" resultMap="NeedsInfoVO" parameterType="com.zzj.db.model.NeedsInfoVO" >
+	  SELECT
+	      needs.*,
+	      mc1.CODE_NAME as needsTypeDisp, 
+		  mc2.CODE_NAME as statusDisp,
+	  	  mc3.CODE_NAME as answerDisp
+	  FROM (
+		       select 
+                    DISTINCT
+					nf.NEEDS_CD
+					,nf.NEEDS_NAME
+					,nf.NEEDS_CONTENT
+					,nf.NEEDS_TYPE
+					,nf.STATUS
+					,nf.UPDATE_TIME
+					,nf.CREATE_TIME
+					,case
+						when (
+							select count(*)
+							from NEEDS_ANSWER na
+							where na.NEEDS_CD = nf.NEEDS_CD
+						) > 0 then '1'
+						else 0 
+					END as answer
+				from needs_info nf
+				left join (select * from topic_field_info where BUSI_TYPE = '06' and DELETE_FLAG = 0) t on t.TOPIC_CD = nf.NEEDS_CD
+				left join (select * from recommend_info where BUSI_TYPE = '06' and DELETE_FLAG = 0) r on r.TOPIC_CD = nf.NEEDS_CD
+				where 1 = 1
+			    <if test="needsName != null" >
+			      AND nf.NEEDS_NAME like concat('%',#{needsName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="needsType != null" >
+			      AND nf.NEEDS_TYPE = #{needsType,jdbcType=TINYINT}
+			    </if>
+			    <if test="sDate != null" >
+			      AND nf.CREATE_TIME &gt;= #{sDate,jdbcType=VARCHAR}
+			    </if>
+			    <if test="eDate != null" >
+			      AND nf.CREATE_TIME &lt;= #{eDate,jdbcType=VARCHAR}
+			    </if>
+			    <if test="statusDisp != null" >
+			      AND nf.STATUS in ( ${statusDisp} )
+			    </if>
+			    <if test="recommendKbn != null" >
+			      AND r.RECOMMEND_KBN in ( ${recommendKbn} )
+			    </if>
+			    <if test="deleteFlag != null" >
+			      AND nf.DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+			    </if>
+		) needs
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'needsType' and mc1.CODE = needs.NEEDS_TYPE
+	    left join mst_code_info mc2 on mc2.CODE_TYPE = 'auditStatus' and mc2.CODE = needs.STATUS
+	    left join mst_code_info mc3 on mc3.CODE_TYPE = 'answerStatus' and mc3.CODE = needs.answer
+	    where 1 = 1
+	    <if test="answerDisp != null" >
+		AND needs.answer in ( ${answerDisp} )
+		</if>
+		order by needs.UPDATE_TIME desc, needs.CREATE_TIME desc
+  </select>  
+  <!--根据条件查询分页记录-->
+  <select id="selectPagging" resultMap="NeedsInfoVO" parameterType="com.zzj.db.model.NeedsInfoVO" >
+	  SELECT
+	      needs.*,
+	      mc1.CODE_NAME as needsTypeDisp, 
+		  mc2.CODE_NAME as statusDisp,
+	  	  mc3.CODE_NAME as answerDisp
+	  FROM (
+		       select 
+                    DISTINCT
+					nf.NEEDS_CD
+					,nf.NEEDS_NAME
+					,nf.NEEDS_CONTENT
+					,nf.NEEDS_TYPE
+					,nf.STATUS
+					,nf.UPDATE_TIME
+					,nf.CREATE_TIME
+					,case
+						when (
+							select count(*)
+							from NEEDS_ANSWER na
+							where na.NEEDS_CD = nf.NEEDS_CD
+						) > 0 then '1'
+						else 0 
+					END as answer
+				from needs_info nf
+				left join (select * from topic_field_info where BUSI_TYPE = '06' and DELETE_FLAG = 0) t on t.TOPIC_CD = nf.NEEDS_CD
+				left join (select * from recommend_info where BUSI_TYPE = '06' and DELETE_FLAG = 0) r on r.TOPIC_CD = nf.NEEDS_CD
+				where 1 = 1
+			    <if test="needsName != null" >
+			      AND nf.NEEDS_NAME like concat('%',#{needsName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="needsType != null" >
+			      AND nf.NEEDS_TYPE = #{needsType,jdbcType=TINYINT}
+			    </if>
+			    <if test="sDate != null" >
+			      AND nf.CREATE_TIME &gt;= #{sDate,jdbcType=VARCHAR}
+			    </if>
+			    <if test="eDate != null" >
+			      AND nf.CREATE_TIME &lt;= #{eDate,jdbcType=VARCHAR}
+			    </if>
+			    <if test="statusDisp != null" >
+			      AND nf.STATUS in ( ${statusDisp} )
+			    </if>
+			    <if test="recommendKbn != null" >
+			      AND r.RECOMMEND_KBN in ( ${recommendKbn} )
+			    </if>
+			    <if test="deleteFlag != null" >
+			      AND nf.DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+			    </if>
+		) needs
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'needsType' and mc1.CODE = needs.NEEDS_TYPE
+	    left join mst_code_info mc2 on mc2.CODE_TYPE = 'auditStatus' and mc2.CODE = needs.STATUS
+	    left join mst_code_info mc3 on mc3.CODE_TYPE = 'answerStatus' and mc3.CODE = needs.answer
+	    where 1 = 1
+	    <if test="answerDisp != null" >
+		AND needs.answer in ( ${answerDisp} )
+		</if>
+		order by needs.UPDATE_TIME desc, needs.CREATE_TIME desc
+		limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据条件查询总件数-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.NeedsInfoVO" >
+	  SELECT
+	      count(*)
+	  FROM (
+		       select 
+                    DISTINCT
+					nf.NEEDS_CD
+					,nf.NEEDS_NAME
+					,nf.NEEDS_CONTENT
+					,nf.NEEDS_TYPE
+					,nf.STATUS
+					,nf.CREATE_TIME
+					,case
+						when (
+							select count(*)
+							from NEEDS_ANSWER na
+							where na.NEEDS_CD = nf.NEEDS_CD
+						) > 0 then '1'
+						else 0 
+					END as answer
+				from needs_info nf
+				left join (select * from topic_field_info where BUSI_TYPE = '06' and DELETE_FLAG = 0) t on t.TOPIC_CD = nf.NEEDS_CD
+				left join (select * from recommend_info where BUSI_TYPE = '06' and DELETE_FLAG = 0) r on r.TOPIC_CD = nf.NEEDS_CD
+				where 1 = 1
+			    <if test="needsName != null" >
+			      AND nf.NEEDS_NAME like concat('%',#{needsName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="needsType != null" >
+			      AND nf.NEEDS_TYPE = #{needsType,jdbcType=TINYINT}
+			    </if>
+			    <if test="sDate != null" >
+			      AND nf.CREATE_TIME &gt;= #{sDate,jdbcType=VARCHAR}
+			    </if>
+			    <if test="eDate != null" >
+			      AND nf.CREATE_TIME &lt;= #{eDate,jdbcType=VARCHAR}
+			    </if>
+			    <if test="statusDisp != null" >
+			      AND nf.STATUS in ( ${statusDisp} )
+			    </if>
+			    <if test="recommendKbn != null" >
+			      AND r.RECOMMEND_KBN in ( ${recommendKbn} )
+			    </if>
+			    <if test="deleteFlag != null" >
+			      AND nf.DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+			    </if>
+		) needs
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'needsType' and mc1.CODE = needs.NEEDS_TYPE
+	    left join mst_code_info mc2 on mc2.CODE_TYPE = 'auditStatus' and mc2.CODE = needs.STATUS
+	    left join mst_code_info mc3 on mc3.CODE_TYPE = 'answerStatus' and mc3.CODE = needs.answer
+	    where 1 = 1
+	    <if test="answerDisp != null" >
+		AND needs.answer in ( ${answerDisp} )
+		</if>
+  </select>
+  <!--删除记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from needs_info
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.NeedsInfo" >
+    insert into needs_info (NEEDS_CD, NEEDS_NAME, NEEDS_CONTENT, 
+      NEEDS_TYPE, STATUS, AUDIT_ID, 
+      AUDIT_TIME, REFUSE_MEMO, KEYWORD, TOP_FLAG, DELETE_FLAG, CREATE_ID, 
+      CREATE_TIME, UPDATE_ID, UPDATE_TIME
+      )
+    values (#{needsCd,jdbcType=VARCHAR}, #{needsName,jdbcType=VARCHAR}, #{needsContent,jdbcType=VARCHAR}, 
+      #{needsType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{auditId,jdbcType=VARCHAR}, 
+      #{auditTime,jdbcType=TIMESTAMP}, #{refuseMemo,jdbcType=VARCHAR}, 
+      #{keyWord,jdbcType=VARCHAR}, #{topFlag,jdbcType=TINYINT}, 
+      #{deleteFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <!--插入记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.NeedsInfo" >
+    insert into needs_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="needsCd != null" >
+        NEEDS_CD,
+      </if>
+      <if test="needsName != null" >
+        NEEDS_NAME,
+      </if>
+      <if test="needsContent != null" >
+        NEEDS_CONTENT,
+      </if>
+      <if test="needsType != null" >
+        NEEDS_TYPE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID,
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME,
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO,
+      </if>
+      <if test="keyWord != null" >
+        KEYWORD,
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="needsCd != null" >
+        #{needsCd,jdbcType=VARCHAR},
+      </if>
+      <if test="needsName != null" >
+        #{needsName,jdbcType=VARCHAR},
+      </if>
+      <if test="needsContent != null" >
+        #{needsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="needsType != null" >
+        #{needsType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseMemo != null" >
+        #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyWord != null" >
+        #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null" >
+        #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据主键更新记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.NeedsInfo" >
+    update needs_info
+    <set >
+      <if test="needsName != null" >
+        NEEDS_NAME = #{needsName,jdbcType=VARCHAR},
+      </if>
+      <if test="needsContent != null" >
+        NEEDS_CONTENT = #{needsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="needsType != null" >
+        NEEDS_TYPE = #{needsType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyWord != null" >
+        KEYWORD = #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.NeedsInfo" >
+    update needs_info
+    set NEEDS_NAME = #{needsName,jdbcType=VARCHAR},
+      NEEDS_CONTENT = #{needsContent,jdbcType=VARCHAR},
+      NEEDS_TYPE = #{needsType,jdbcType=TINYINT},
+      STATUS = #{status,jdbcType=TINYINT},
+      AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      KEYWORD = #{keyWord,jdbcType=VARCHAR},
+      TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据TopicFieldInfo查询NEEDS_Info中指定记录-->
+  <select id="slideEditSearch" resultMap="BaseResultMap" parameterType="com.zzj.db.model.SlideResultVO" >
+  	select 
+    <include refid="Base_Column_List" />
+    from needs_info
+    where
+    NEEDS_CD in (
+	    select TOPIC_CD 
+	   		from topic_field_info 
+	    where DELETE_FLAG = 0
+	    <if test="slideResultBusi != null" >
+	    and BUSI_TYPE = #{slideResultBusi,jdbcType=VARCHAR}
+	    </if>
+	    <if test="techField != 'null'" > 
+	    and TECH_FIELD_CD = #{techField,jdbcType=VARCHAR}
+	    </if>
+    ) 
+    <if test="slideResultTopic != null" >
+    and NEEDS_NAME like CONCAT('%',#{slideResultTopic,jdbcType=VARCHAR},'%')
+    </if>
+    and DELETE_FLAG = '0'
+  </select>
+</mapper>

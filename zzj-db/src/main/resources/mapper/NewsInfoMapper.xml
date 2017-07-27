@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.NewsInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.NewsInfo" >
+    <id column="NEWS_CD" property="newsCd" jdbcType="VARCHAR" />
+    <result column="NEWS_TYPE" property="newsType" jdbcType="TINYINT" />
+    <result column="NEWS_NICK" property="newsNick" jdbcType="VARCHAR" />
+    <result column="NEWS_NAME" property="newsName" jdbcType="VARCHAR" />
+    <result column="NEWS_FILE" property="newsFile" jdbcType="VARCHAR" />
+    <result column="NEWS_ADDRESS" property="newsAddress" jdbcType="VARCHAR" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="TINYINT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_DISCOUNT" property="priceDiscount" jdbcType="DECIMAL" />
+    <result column="BIG_ICON" property="bigIcon" jdbcType="VARCHAR" />
+    <result column="LITTLE_ICON" property="littleIcon" jdbcType="VARCHAR" />
+    <result column="SOURCE_TYPE" property="sourceType" jdbcType="TINYINT" />
+    <result column="SOURCE_OWNER" property="sourceOwner" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD2" property="expertCd2" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD3" property="expertCd3" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD4" property="expertCd4" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD5" property="expertCd5" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="SHARE_URL" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zzj.db.dto.NewsInfo" extends="BaseResultMap" >
+    <result column="NEWS_BRIEF" property="newsBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+   <!-- 知识编辑页面使用的知识基础信息 ************** -->
+  <resultMap id="BaseResultMap2" type="com.zzj.db.model.NewsInfoEditVO" >
+    <result column="NEWS_CD" property="newsCd" jdbcType="VARCHAR" />
+    <result column="NEWS_TYPE" property="newsType" jdbcType="TINYINT" />
+    <result column="NEWS_NICK" property="newsNick" jdbcType="VARCHAR" />
+    <result column="NEWS_NAME" property="newsName" jdbcType="VARCHAR" />
+    <result column="NEWS_FILE" property="newsFile" jdbcType="VARCHAR" />
+    <result column="NEWS_ADDRESS" property="newsAddress" jdbcType="VARCHAR" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="TINYINT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_DISCOUNT" property="priceDiscount" jdbcType="DECIMAL" />
+    <result column="BIG_ICON" property="bigIcon" jdbcType="VARCHAR" />
+    <result column="LITTLE_ICON" property="littleIcon" jdbcType="VARCHAR" />
+    <result column="SOURCE_TYPE" property="sourceType" jdbcType="TINYINT" />
+    <result column="SOURCE_OWNER" property="sourceOwner" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD2" property="expertCd2" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD3" property="expertCd3" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD4" property="expertCd4" jdbcType="VARCHAR" />
+    <result column="EXPERT_CD5" property="expertCd5" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME2" property="expertCd2Name" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME3" property="expertCd3Name" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME4" property="expertCd4Name" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME5" property="expertCd5Name" jdbcType="VARCHAR" />
+    <result column="SOURCE_OWNER_NAME" property="sourceOwnerName" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="SHARE_URL" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs2" type="com.zzj.db.model.NewsInfoEditVO" extends="BaseResultMap2" >
+    <result column="NEWS_BRIEF" property="newsBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <!-- 专家一览页面使用的知识统计信息 **************-->
+  <resultMap id="ArticleCountMap" type="com.zzj.db.model.ExpertArticleCountVO" >
+    <result column="articleCount" property="articleCount" jdbcType="INTEGER" />
+    <result column="pendingReviewArticleCount" property="pendingReviewArticleCount" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 知识一览页面使用的知识基础信息 ************** -->
+  <resultMap id="NewsInfoListMap" type="com.zzj.db.model.NewsInfoListVO" >
+    <id column="NEWS_CD" property="newsCd" jdbcType="VARCHAR" />
+    <result column="NEWS_TYPE" property="newsType" jdbcType="TINYINT" />
+    <result column="NEWS_NAME" property="newsName" jdbcType="VARCHAR" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="TINYINT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="COLLECT_COUNT" property="userHandleInfo.collectCount" jdbcType="INTEGER" />
+    <result column="SCAN_COUNT" property="userHandleInfo.scanCount" jdbcType="INTEGER" />
+    <result column="DOWNLOAD_COUNT" property="userHandleInfo.downloadCount" jdbcType="INTEGER" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    NEWS_CD, NEWS_TYPE, NEWS_NICK, NEWS_NAME, NEWS_FILE, NEWS_ADDRESS, PAYMENT_KBN, 
+    PRICE, PRICE_DISCOUNT, BIG_ICON, LITTLE_ICON, SOURCE_TYPE, SOURCE_OWNER, EXPERT_CD2, 
+    EXPERT_CD3, EXPERT_CD4, EXPERT_CD5, KEYWORD, SHARE_URL, STATUS, AUDIT_ID, AUDIT_TIME, 
+    REFUSE_MEMO, DELETE_FLAG, TOP_FLAG, CREATE_ID, CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    NEWS_BRIEF
+  </sql>
+  <!--根据主键查询News_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs2" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from news_info
+    where NEWS_CD = #{newsCd,jdbcType=VARCHAR}
+  </select>
+  
+  <!--查找知识详细内容-->
+  <select id="selectNewInfo" resultMap="ResultMapWithBLOBs2" parameterType="java.lang.String" >
+    select 
+     ni.NEWS_CD,ni.NEWS_NAME,ni.NEWS_BRIEF,ni.NEWS_ADDRESS,ni.BIG_ICON,ni.SOURCE_OWNER,
+     ni.EXPERT_CD2, ni.EXPERT_CD3, ni.EXPERT_CD4, ni.EXPERT_CD5, ni.SHARE_URL,ni.UPDATE_TIME,
+     exp1.EXPERT_NAME AS SOURCE_OWNER_NAME,ni.SOURCE_TYPE,
+     exp2.EXPERT_NAME AS EXPERT_NAME2,
+     exp3.EXPERT_NAME AS EXPERT_NAME3,
+     exp4.EXPERT_NAME AS EXPERT_NAME4,
+     exp5.EXPERT_NAME AS EXPERT_NAME5
+    from news_info ni
+    left join expert_info exp1
+             on SOURCE_OWNER = exp1.EXPERT_ID
+	left join expert_info exp2
+	             on EXPERT_CD2 = exp2.EXPERT_ID
+	left join expert_info exp3
+	             on EXPERT_CD3 = exp3.EXPERT_ID
+	left join expert_info exp4
+	             on EXPERT_CD4 = exp4.EXPERT_ID
+	left join expert_info exp5
+	             on EXPERT_CD5 = exp5.EXPERT_ID
+    where NEWS_CD = #{newsCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据专家id查询专家文章统计信息**********-->
+  <select id="findNewsCountByExpertId" resultMap="ArticleCountMap" parameterType="string" >
+    select 
+    	count(*) as articleCount,
+    	sum(case when STATUS = 0 then 1 else 0 end ) as pendingReviewArticleCount
+	from news_info
+	where DELETE_FLAG = 0
+	   and (SOURCE_OWNER = #{expertId,jdbcType=VARCHAR} or
+	        EXPERT_CD2 = #{expertId,jdbcType=VARCHAR} or
+	        EXPERT_CD3 = #{expertId,jdbcType=VARCHAR} or
+	        EXPERT_CD4 = #{expertId,jdbcType=VARCHAR} or
+	        EXPERT_CD5 = #{expertId,jdbcType=VARCHAR} )
+  </select>
+  <!--根据知识一览页面带分页条件查询News_Info表中指定记录************-->
+  <select id="selectSelectiveByPage" resultMap="NewsInfoListMap" parameterType="map" >
+    select 
+		n.NEWS_CD as NEWS_CD, 
+		n.NEWS_TYPE as NEWS_TYPE, 
+		n.NEWS_NAME as NEWS_NAME, 
+		n.PAYMENT_KBN as PAYMENT_KBN, 
+		n.PRICE as PRICE,
+		n.STATUS as STATUS,
+		n.CREATE_TIME,
+    	nh.COLLECT_COUNT as COLLECT_COUNT,
+    	nh.SCAN_COUNT as SCAN_COUNT,
+    	nh.DOWNLOAD_COUNT as DOWNLOAD_COUNT
+	from news_info n
+	left join (select * from topic_field_info where BUSI_TYPE = '02' and DELETE_FLAG = 0) t 
+ 		on t.TOPIC_CD = n.NEWS_CD
+	left join (select * from recommend_info where BUSI_TYPE = '02' and DELETE_FLAG = 0) r
+ 		on r.TOPIC_CD = n.NEWS_CD
+ 	left join user_handle_info nh
+ 		on nh.TOPIC_CD = n.NEWS_CD
+    <where>
+    	n.DELETE_FLAG = 0
+      <if test="newsName != null" >
+        and n.NEWS_NAME like CONCAT('%',#{newsName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="paymentKbn != null" >
+        AND n.PAYMENT_KBN in
+		<foreach item="item" index="index" collection="paymentKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="techField != null" >
+        AND t.TECH_FIELD_CD in
+		<foreach item="item" index="index" collection="techField" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="newsType != null" >
+        and n.NEWS_TYPE = #{newsType,jdbcType=TINYINT}
+      </if>
+      <if test="sourceType1 != null and sourceType2 == null" >
+        AND n.SOURCE_TYPE = #{sourceType1}
+      </if>
+      <if test="sourceType1 == null and sourceType2 != null and expertIds == null" >
+        AND n.SOURCE_TYPE = #{sourceType2}
+      </if>
+      <if test="sourceType1 == null and sourceType2 != null and expertIds != null" >
+        AND ( n.SOURCE_OWNER in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+       		 	</foreach>
+        	OR n.EXPERT_CD2 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD3 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD4 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD5 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	)
+      </if>
+      <if test="sourceType1 != null and sourceType2 != null and expertIds != null" >
+        AND ( n.SOURCE_TYPE = #{sourceType1}
+        	OR  n.SOURCE_OWNER in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD2 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD3 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD4 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD5 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	)
+      </if>
+      <if test="recommendKbn != null" >
+        AND r.RECOMMEND_KBN in
+		<foreach item="item" index="index" collection="recommendKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="startDate != null and startDate != ''">
+		 	AND n.CREATE_TIME &gt;= #{startDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endDate != null and endDate != ''">
+		 	AND n.CREATE_TIME &lt;= #{endDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    group by n.NEWS_CD
+	order by n.UPDATE_TIME DESC, n.CREATE_TIME DESC
+	limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据知识一览页面条件查询News_Info表中所有记录，excel导出************-->
+  <select id="selectAll" resultMap="NewsInfoListMap" parameterType="map" >
+    select 
+		n.NEWS_CD as NEWS_CD, 
+		n.NEWS_TYPE as NEWS_TYPE, 
+		n.NEWS_NAME as NEWS_NAME, 
+		n.PAYMENT_KBN as PAYMENT_KBN, 
+		n.PRICE as PRICE,
+		n.STATUS as STATUS,
+		n.CREATE_TIME,
+    	nh.COLLECT_COUNT as COLLECT_COUNT,
+    	nh.SCAN_COUNT as SCAN_COUNT,
+    	nh.DOWNLOAD_COUNT as DOWNLOAD_COUNT
+	from news_info n
+	left join (select * from topic_field_info where BUSI_TYPE = '02' and DELETE_FLAG = 0) t 
+ 		on t.TOPIC_CD = n.NEWS_CD
+	left join (select * from recommend_info where BUSI_TYPE = '02' and DELETE_FLAG = 0) r
+ 		on r.TOPIC_CD = n.NEWS_CD
+ 	left join user_handle_info nh
+ 		on nh.TOPIC_CD = n.NEWS_CD
+    <where>
+    	n.DELETE_FLAG = 0
+      <if test="newsName != null" >
+        and n.NEWS_NAME like CONCAT('%',#{newsName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="paymentKbn != null" >
+        AND n.PAYMENT_KBN in
+		<foreach item="item" index="index" collection="paymentKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="techField != null" >
+        AND t.TECH_FIELD_CD in
+		<foreach item="item" index="index" collection="techField" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="newsType != null" >
+        and n.NEWS_TYPE = #{newsType,jdbcType=TINYINT}
+      </if>
+      <if test="sourceType1 != null and sourceType2 == null" >
+        AND n.SOURCE_TYPE = #{sourceType1}
+      </if>
+      <if test="sourceType1 == null and sourceType2 != null and expertIds == null" >
+        AND n.SOURCE_TYPE = #{sourceType2}
+      </if>
+      <if test="sourceType1 == null and sourceType2 != null and expertIds != null" >
+        AND ( n.SOURCE_OWNER in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+       		 	</foreach>
+        	OR n.EXPERT_CD2 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD3 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD4 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD5 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	)
+      </if>
+      <if test="sourceType1 != null and sourceType2 != null and expertIds != null" >
+        AND ( n.SOURCE_TYPE = #{sourceType1}
+        	OR  n.SOURCE_OWNER in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD2 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD3 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD4 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD5 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	)
+      </if>
+      <if test="recommendKbn != null" >
+        AND r.RECOMMEND_KBN in
+		<foreach item="item" index="index" collection="recommendKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="startDate != null and startDate != ''">
+		 	AND n.CREATE_TIME &gt;= #{startDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endDate != null and endDate != ''">
+		 	AND n.CREATE_TIME &lt;= #{endDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    group by n.NEWS_CD
+	order by n.UPDATE_TIME DESC ,n.CREATE_TIME DESC
+  </select>
+  <!--按条件查询知识总记录数**********-->
+  <select id="selectTotalCount" resultType="java.lang.Integer"  parameterType="map">
+    select count(*) from (
+    select 
+		n.NEWS_CD
+	from news_info n
+	left join (select * from topic_field_info where BUSI_TYPE = '02' and DELETE_FLAG = 0) t 
+ 		on t.TOPIC_CD = n.NEWS_CD
+	left join (select * from recommend_info where BUSI_TYPE = '02' and DELETE_FLAG = 0) r
+ 		on r.TOPIC_CD = n.NEWS_CD
+ 	left join user_handle_info nh
+ 		on nh.TOPIC_CD = n.NEWS_CD
+    <where>
+    	n.DELETE_FLAG = 0
+      <if test="newsName != null" >
+        and n.NEWS_NAME like CONCAT('%',#{newsName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="paymentKbn != null" >
+        AND n.PAYMENT_KBN in
+		<foreach item="item" index="index" collection="paymentKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="techField != null" >
+        AND t.TECH_FIELD_CD in
+		<foreach item="item" index="index" collection="techField" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="newsType != null" >
+        and n.NEWS_TYPE = #{newsType,jdbcType=TINYINT}
+      </if>
+      <if test="sourceType1 != null and sourceType2 == null" >
+        AND n.SOURCE_TYPE = #{sourceType1}
+      </if>
+      <if test="sourceType1 == null and sourceType2 != null and expertIds == null" >
+        AND n.SOURCE_TYPE = #{sourceType2}
+      </if>
+      <if test="sourceType1 == null and sourceType2 != null and expertIds != null" >
+        AND ( n.SOURCE_OWNER in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+       		 	</foreach>
+        	OR n.EXPERT_CD2 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD3 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD4 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD5 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	)
+      </if>
+      <if test="sourceType1 != null and sourceType2 != null and expertIds != null" >
+        AND ( n.SOURCE_TYPE = #{sourceType1}
+        	OR  n.SOURCE_OWNER in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD2 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD3 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD4 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	OR n.EXPERT_CD5 in
+        		<foreach item="item" index="index" collection="expertIds" open="(" separator="," close=")">  
+            		#{item}  
+        		</foreach>
+        	)
+      </if>
+      <if test="recommendKbn != null" >
+        AND r.RECOMMEND_KBN in
+		<foreach item="item" index="index" collection="recommendKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="startDate != null and startDate != ''">
+		 	AND n.CREATE_TIME &gt;= #{startDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endDate != null and endDate != ''">
+		 	AND n.CREATE_TIME &lt;= #{endDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    group by n.NEWS_CD ) m
+  </select>
+   <!--根据SOURCE_OWNER删除更新News_Info中指定记录***************-->
+  <update id="deleteNewsBySourceOwner" parameterType="com.zzj.db.dto.NewsInfo" >
+    update news_info
+    <set >
+        DELETE_FLAG = 1,
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SOURCE_OWNER = #{sourceOwner,jdbcType=VARCHAR}
+	   or EXPERT_CD2 = #{sourceOwner,jdbcType=VARCHAR}
+	   or EXPERT_CD3 = #{sourceOwner,jdbcType=VARCHAR}
+	   or EXPERT_CD4 = #{sourceOwner,jdbcType=VARCHAR}
+	   or EXPERT_CD5 = #{sourceOwner,jdbcType=VARCHAR}
+  </update>
+  <!--根据SOURCE_OWNER查询News_Info表中指定记录，带分页**********-->
+  <select id="findNewsBySourceOwnerByPage" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from news_info
+    where DELETE_FLAG = 0
+      and (SOURCE_OWNER = #{expertId,jdbcType=VARCHAR}
+    	   or EXPERT_CD2 = #{expertId,jdbcType=VARCHAR}
+	       or EXPERT_CD3 = #{expertId,jdbcType=VARCHAR}
+	       or EXPERT_CD4 = #{expertId,jdbcType=VARCHAR}
+	       or EXPERT_CD5 = #{expertId,jdbcType=VARCHAR})
+    order by UPDATE_TIME DESC , CREATE_TIME DESC 
+    limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据SOURCE_OWNER查询News_Info表中总记录数**********-->
+  <select id="findNewsCountBySourceOwner" resultType="int" parameterType="map" >
+    select count(*) from (
+    select 
+    <include refid="Base_Column_List" />
+    from news_info
+	where DELETE_FLAG = 0
+      and (SOURCE_OWNER = #{expertId,jdbcType=VARCHAR}
+    	   or EXPERT_CD2 = #{expertId,jdbcType=VARCHAR}
+	       or EXPERT_CD3 = #{expertId,jdbcType=VARCHAR}
+	       or EXPERT_CD4 = #{expertId,jdbcType=VARCHAR}
+	       or EXPERT_CD5 = #{expertId,jdbcType=VARCHAR})
+    ) m
+  </select>
+  <!--根据主键删除News_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from news_info
+    where NEWS_CD = #{newsCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.NewsInfo" >
+    insert into news_info (NEWS_CD, NEWS_TYPE, NEWS_NICK, 
+      NEWS_NAME, NEWS_BRIEF, NEWS_FILE, 
+      NEWS_ADDRESS, PAYMENT_KBN, PRICE, 
+      PRICE_DISCOUNT, BIG_ICON, LITTLE_ICON, 
+      SOURCE_TYPE, SOURCE_OWNER, EXPERT_CD2, 
+      EXPERT_CD3, EXPERT_CD4, EXPERT_CD5, 
+      KEYWORD, SHARE_URL, STATUS, 
+      AUDIT_ID, AUDIT_TIME, REFUSE_MEMO, 
+      DELETE_FLAG, TOP_FLAG, CREATE_ID, CREATE_TIME, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{newsCd,jdbcType=VARCHAR}, #{newsType,jdbcType=TINYINT}, #{newsNick,jdbcType=VARCHAR}, 
+      #{newsName,jdbcType=VARCHAR}, #{newsBrief,jdbcType=LONGVARCHAR}, #{newsFile,jdbcType=VARCHAR}, 
+      #{newsAddress,jdbcType=VARCHAR}, #{paymentKbn,jdbcType=TINYINT}, #{price,jdbcType=DECIMAL}, 
+      #{priceDiscount,jdbcType=DECIMAL}, #{bigIcon,jdbcType=VARCHAR}, #{littleIcon,jdbcType=VARCHAR}, 
+      #{sourceType,jdbcType=TINYINT}, #{sourceOwner,jdbcType=VARCHAR}, #{expertCd2,jdbcType=VARCHAR}, 
+      #{expertCd3,jdbcType=VARCHAR}, #{expertCd4,jdbcType=VARCHAR}, #{expertCd5,jdbcType=VARCHAR}, 
+      #{keyword,jdbcType=VARCHAR}, #{shareUrl,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{auditId,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{refuseMemo,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=TINYINT}, #{topFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.NewsInfo" >
+    insert into news_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="newsCd != null" >
+        NEWS_CD,
+      </if>
+      <if test="newsType != null" >
+        NEWS_TYPE,
+      </if>
+      <if test="newsNick != null" >
+        NEWS_NICK,
+      </if>
+      <if test="newsName != null" >
+        NEWS_NAME,
+      </if>
+      <if test="newsBrief != null" >
+        NEWS_BRIEF,
+      </if>
+      <if test="newsFile != null" >
+        NEWS_FILE,
+      </if>
+      <if test="newsAddress != null" >
+        NEWS_ADDRESS,
+      </if>
+      <if test="paymentKbn != null" >
+        PAYMENT_KBN,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="priceDiscount != null" >
+        PRICE_DISCOUNT,
+      </if>
+      <if test="bigIcon != null" >
+        BIG_ICON,
+      </if>
+      <if test="littleIcon != null" >
+        LITTLE_ICON,
+      </if>
+      <if test="sourceType != null" >
+        SOURCE_TYPE,
+      </if>
+      <if test="sourceOwner != null" >
+        SOURCE_OWNER,
+      </if>
+      <if test="expertCd2 != null" >
+        EXPERT_CD2,
+      </if>
+      <if test="expertCd3 != null" >
+        EXPERT_CD3,
+      </if>
+      <if test="expertCd4 != null" >
+        EXPERT_CD4,
+      </if>
+      <if test="expertCd5 != null" >
+        EXPERT_CD5,
+      </if>
+      <if test="keyword != null" >
+        KEYWORD,
+      </if>
+      <if test="shareUrl != null" >
+        SHARE_URL,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID,
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME,
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="newsCd != null" >
+        #{newsCd,jdbcType=VARCHAR},
+      </if>
+      <if test="newsType != null" >
+        #{newsType,jdbcType=TINYINT},
+      </if>
+      <if test="newsNick != null" >
+        #{newsNick,jdbcType=VARCHAR},
+      </if>
+      <if test="newsName != null" >
+        #{newsName,jdbcType=VARCHAR},
+      </if>
+      <if test="newsBrief != null" >
+        #{newsBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="newsFile != null" >
+        #{newsFile,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAddress != null" >
+        #{newsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentKbn != null" >
+        #{paymentKbn,jdbcType=TINYINT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="priceDiscount != null" >
+        #{priceDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="bigIcon != null" >
+        #{bigIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="littleIcon != null" >
+        #{littleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="sourceOwner != null" >
+        #{sourceOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd2 != null" >
+        #{expertCd2,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd3 != null" >
+        #{expertCd3,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd4 != null" >
+        #{expertCd4,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd5 != null" >
+        #{expertCd5,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseMemo != null" >
+        #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="topFlag != null" >
+        #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新News_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.NewsInfo" >
+    update news_info
+    <set >
+      <if test="newsType != null" >
+        NEWS_TYPE = #{newsType,jdbcType=TINYINT},
+      </if>
+      <if test="newsNick != null" >
+        NEWS_NICK = #{newsNick,jdbcType=VARCHAR},
+      </if>
+      <if test="newsName != null" >
+        NEWS_NAME = #{newsName,jdbcType=VARCHAR},
+      </if>
+      <if test="newsBrief != null" >
+        NEWS_BRIEF = #{newsBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="newsFile != null" >
+        NEWS_FILE = #{newsFile,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAddress != null" >
+        NEWS_ADDRESS = #{newsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentKbn != null" >
+        PAYMENT_KBN = #{paymentKbn,jdbcType=TINYINT},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="price == null" >
+        PRICE = null,
+      </if>
+      <if test="priceDiscount != null" >
+        PRICE_DISCOUNT = #{priceDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="bigIcon != null" >
+        BIG_ICON = #{bigIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="littleIcon != null" >
+        LITTLE_ICON = #{littleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        SOURCE_TYPE = #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="sourceOwner != null" >
+        SOURCE_OWNER = #{sourceOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd2 != null" >
+        EXPERT_CD2 = #{expertCd2,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd3 != null" >
+        EXPERT_CD3 = #{expertCd3,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd4 != null" >
+        EXPERT_CD4 = #{expertCd4,jdbcType=VARCHAR},
+      </if>
+      <if test="expertCd5 != null" >
+        EXPERT_CD5 = #{expertCd5,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        KEYWORD = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        SHARE_URL = #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where NEWS_CD = #{newsCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新News_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.NewsInfo" >
+    update news_info
+    set NEWS_TYPE = #{newsType,jdbcType=TINYINT},
+      NEWS_NICK = #{newsNick,jdbcType=VARCHAR},
+      NEWS_NAME = #{newsName,jdbcType=VARCHAR},
+      NEWS_BRIEF = #{newsBrief,jdbcType=LONGVARCHAR},
+      NEWS_FILE = #{newsFile,jdbcType=VARCHAR},
+      NEWS_ADDRESS = #{newsAddress,jdbcType=VARCHAR},
+      PAYMENT_KBN = #{paymentKbn,jdbcType=TINYINT},
+      PRICE = #{price,jdbcType=DECIMAL},
+      PRICE_DISCOUNT = #{priceDiscount,jdbcType=DECIMAL},
+      BIG_ICON = #{bigIcon,jdbcType=VARCHAR},
+      LITTLE_ICON = #{littleIcon,jdbcType=VARCHAR},
+      SOURCE_TYPE = #{sourceType,jdbcType=TINYINT},
+      SOURCE_OWNER = #{sourceOwner,jdbcType=VARCHAR},
+      EXPERT_CD2 = #{expertCd2,jdbcType=VARCHAR},
+      EXPERT_CD3 = #{expertCd3,jdbcType=VARCHAR},
+      EXPERT_CD4 = #{expertCd4,jdbcType=VARCHAR},
+      EXPERT_CD5 = #{expertCd5,jdbcType=VARCHAR},
+      KEYWORD = #{keyword,jdbcType=VARCHAR},
+      SHARE_URL = #{shareUrl,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where NEWS_CD = #{newsCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据TopicFieldInfo查询Expert_Info中指定记录-->
+  <select id="slideEditSearch" resultMap="BaseResultMap" parameterType="com.zzj.db.model.SlideResultVO" >
+  	select 
+    <include refid="Base_Column_List" />
+    from news_info
+    where
+    NEWS_CD in (
+    select TOPIC_CD 
+    from topic_field_info 
+    where
+    DELETE_FLAG = 0
+    <if test="slideResultBusi != null" >
+    and BUSI_TYPE = #{slideResultBusi,jdbcType=VARCHAR}
+    </if>
+    <if test="techField != 'null'" > 
+    and TECH_FIELD_CD = #{techField,jdbcType=VARCHAR}
+    </if>
+    ) 
+    <if test="slideResultTopic != null" >
+    and NEWS_NAME like CONCAT('%',#{slideResultTopic,jdbcType=VARCHAR},'%')
+    </if>
+    and DELETE_FLAG = '0'
+  </select>
+</mapper>

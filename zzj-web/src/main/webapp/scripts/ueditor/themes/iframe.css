@@ -1,0 +1,49 @@
+﻿/*可以在这里添加你自己的css*/
+em {
+font-style:italic;
+}
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;line-height: 1.6;background: #FFF;}
+* {max-width: 100%!important;margin:0;padding:0;font-style:normal;box-sizing: border-box!important;-webkit-box-sizing: border-box!important;word-wrap: break-word!important;}
+body{-webkit-touch-callout:none;position: absolute; width: 100%;margin: 0;padding: 15px !important;font-size:16px;overflow-x:hidden;font-family:"微软雅黑","Microsoft YaHei",Arial,sans-serif;background-color:#FFF;line-height:inherit}
+body{word-break: break-all;	word-wrap: break-word;cursor:text;}
+h1,h2,h3,h4,h5,h6{font-weight:bold;}
+h1{font-size:32px;line-height:36px;}
+h2{font-size:27px;line-height:29px;}
+h3{font-size:19px;line-height:23px;}
+h4{font-size:16px;line-height:19px;}
+h5{font-size:14px;line-height:18px;}
+h6{font-size:12px;line-height:14px;}
+
+p{clear:both;margin:0 0;font-size:16px;min-height:1em;white-space: normal;}
+img{*zoom:1;max-width:100%;*max-width:96%;height:auto !important;}
+iframe{width:301px !important;border:0;background-color:none;}
+iframe,.video_iframe {background-color: #000000;width: 100% !important;position: static;}
+.135editor {border:0 none;}
+
+/*vote*/
+.vote_area{display:block;}
+.vote_iframe{height:100%;width:100% !important;*width:96% !important;}
+
+blockquote{margin:0;padding-left:10px;border-left:3px solid #DBDBDB;}
+
+ol,ul,dl
+{
+	/* IE7: reset rtl list margin. (#7334) */
+	*margin-right: 0px;
+	/* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+	padding: 0 0 0 30px;
+}
+
+table {margin-bottom: 10px;border-collapse: collapse;display: table;width:100% !important;}
+
+hr{border: 0px;border-top: 1px solid #ccc;}
+img:hover {z-index:-1;cursor:pointer;}
+pre{
+	white-space: pre-wrap; /* CSS 2.1 */
+	word-wrap: break-word; /* IE7 */
+}
+.marker {
+	background-color: Yellow;
+}
+
+span[lang] {font-style: italic;}

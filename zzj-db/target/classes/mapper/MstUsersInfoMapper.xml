@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstUsersInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstUsersInfo" >
+    <id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+    <result column="PHONE_NUMBER" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="ERROR_COUNT" property="errorCount" jdbcType="TINYINT" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    USER_ID, USER_NAME, PASSWORD, ROLE_ID, PHONE_NUMBER, ERROR_COUNT, DELETE_FLAG, CREATE_ID, 
+    CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <!--根据主键查询Mst_User_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_users_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除Mst_User_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from mst_users_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstUsersInfo" >
+    insert into mst_users_info (USER_ID, USER_NAME, PASSWORD, 
+      ROLE_ID, PHONE_NUMBER, ERROR_COUNT, 
+      DELETE_FLAG, CREATE_ID, CREATE_TIME, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{roleId,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{errorCount,jdbcType=TINYINT}, 
+      #{deleteFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstUsersInfo" >
+    insert into mst_users_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="phoneNumber != null" >
+        PHONE_NUMBER,
+      </if>
+      <if test="errorCount != null" >
+        ERROR_COUNT,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="errorCount != null" >
+        #{errorCount,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Mst_User_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstUsersInfo" >
+    update mst_users_info
+    <set >
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="errorCount != null" >
+        ERROR_COUNT = #{errorCount,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </update>
+  <!--根据条件查询Mst_User_Info中指定记录-->
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.MstUsersInfo" >
+    select 
+    <include refid="Base_Column_List" /> 
+    from mst_users_info
+    <where>
+      <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="userName != null" >
+        and USER_NAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="password != null" >
+       and PASSWORD = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="roleId != null" >
+        and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      </if>
+      <if test="phoneNumber != null" >
+        and PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="deleteFlag != null" >
+        and DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+      </if>
+      <if test="createId != null" >
+        and CREATE_ID = #{createId,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateId != null" >
+        and UPDATE_ID = #{updateId,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null" >
+        and UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
+  <!--根据主键更新Mst_User_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstUsersInfo" >
+    update mst_users_info
+    set USER_NAME = #{userName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      ROLE_ID = #{roleId,jdbcType=VARCHAR},
+      PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR},
+      ERROR_COUNT = #{errorCount,jdbcType=TINYINT},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键查询Mst_User_Info表中对应记录的UserName字段-->
+  <select id="getUserName" resultType="java.lang.String" parameterType="java.lang.String" >
+    select 
+    USER_NAME
+    from mst_users_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+  <!--根据条件查询Mst_User_Info中指定记录条目数-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.UserVO" >
+    select 
+    count(*)
+    from mst_users_info
+    <where>
+      <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="userName != null" >
+        and USER_NAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="password != null" >
+       and PASSWORD = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="roleId != null" >
+        and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      </if>
+      <if test="phoneNumber != null" >
+        and PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="deleteFlag != null" >
+        and DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+      </if>
+      <if test="createId != null" >
+        and CREATE_ID = #{createId,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateId != null" >
+        and UPDATE_ID = #{updateId,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null" >
+        and UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
+  <!--根据条件分页查询Mst_User_Info中指定记录-->
+  <select id="fySelectSelective" resultMap="BaseResultMap" parameterType="com.zzj.db.model.UserVO" >
+    select 
+    <include refid="Base_Column_List" /> 
+    from mst_users_info
+    <where>
+      <if test="userId != null" >
+        and USER_ID = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="userName != null" >
+        and USER_NAME like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="password != null" >
+       and PASSWORD = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="roleId != null" >
+        and ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      </if>
+      <if test="phoneNumber != null" >
+        and PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR}
+      </if>
+      <if test="deleteFlag != null" >
+        and DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+      </if>
+      <if test="createId != null" >
+        and CREATE_ID = #{createId,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateId != null" >
+        and UPDATE_ID = #{updateId,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null" >
+        and UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    order by UPDATE_TIME DESC, CREATE_TIME DESC
+    limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+</mapper>

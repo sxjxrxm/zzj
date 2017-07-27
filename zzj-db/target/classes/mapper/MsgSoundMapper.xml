@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MsgSoundMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MsgSound" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MID" property="mid" jdbcType="BIGINT" />
+    <result column="UUID" property="uuid" jdbcType="VARCHAR" />
+    <result column="SIZE" property="size" jdbcType="INTEGER" />
+    <result column="SECOND" property="second" jdbcType="INTEGER" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="MSG_SEQ" property="msgSeq" jdbcType="INTEGER" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    ID, MID, UUID, SIZE, SECOND, ADDRESS, MSG_SEQ
+  </sql>
+  <!--根据主键查询msg_sound中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from msg_sound
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <!--根据MID查询msg_sound中指定记录-->
+ <select id="selectByMid" resultType="com.zzj.db.model.CourseMsgVO" parameterType="java.lang.Long" >
+    select 
+    ID, MID, UUID, SIZE, SECOND, ADDRESS, MSG_SEQ as msgSeq, 3 as msgType
+    from msg_sound
+    where MID = #{mid,jdbcType=BIGINT}
+  </select>
+  <!--根据主键删除msg_sound中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from msg_sound
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MsgSound" >
+    insert into msg_sound (ID, MID, UUID, 
+      SIZE, SECOND, ADDRESS, 
+      MSG_SEQ)
+    values (#{id,jdbcType=BIGINT}, #{mid,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, 
+      #{size,jdbcType=INTEGER}, #{second,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+      #{msgSeq,jdbcType=INTEGER})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MsgSound" >
+    insert into msg_sound
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="mid != null" >
+        MID,
+      </if>
+      <if test="uuid != null" >
+        UUID,
+      </if>
+      <if test="size != null" >
+        SIZE,
+      </if>
+      <if test="second != null" >
+        SECOND,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="msgSeq != null" >
+        MSG_SEQ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=BIGINT},
+      </if>
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=INTEGER},
+      </if>
+      <if test="second != null" >
+        #{second,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSeq != null" >
+        #{msgSeq,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新msg_sound中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MsgSound" >
+    update msg_sound
+    <set >
+      <if test="mid != null" >
+        MID = #{mid,jdbcType=BIGINT},
+      </if>
+      <if test="uuid != null" >
+        UUID = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null" >
+        SIZE = #{size,jdbcType=INTEGER},
+      </if>
+      <if test="second != null" >
+        SECOND = #{second,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSeq != null" >
+        MSG_SEQ = #{msgSeq,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <!--根据主键更新msg_sound中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MsgSound" >
+    update msg_sound
+    set MID = #{mid,jdbcType=BIGINT},
+      UUID = #{uuid,jdbcType=VARCHAR},
+      SIZE = #{size,jdbcType=INTEGER},
+      SECOND = #{second,jdbcType=INTEGER},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      MSG_SEQ = #{msgSeq,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <!--根据UUID和GroupId查询msg_sound中指定记录-->
+  <select id="selectByUuidAndGroupId" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    	<include refid="Base_Column_List" />
+    from 
+    	msg_sound
+    where 
+    	UUID = #{uuid,jdbcType=VARCHAR}
+    limit 1
+  </select>
+</mapper>

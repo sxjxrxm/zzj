@@ -1,0 +1,41 @@
+﻿
+.red {color:red}
+
+.detailDesc {
+		color:#aaa;
+		font-size:10px;
+		margin:0;
+	}
+
+.tbform .selectArea {
+		height:102px;
+		width:220px;
+	}
+
+.tbCenter {
+	  text-align:center;
+	}
+
+input.input-small {
+		width:140px;
+	}
+	
+.imgFile{
+	position:absolute;
+	overflow: hidden;
+	width:48px;
+	height:28px;
+	opacity:0;
+	filter:alpha(opacity=0);
+	margin-left:-10px;
+	margin-top:-4px;
+	}
+
+span div img{
+	width: 360px;
+	height: 120px;
+	}
+
+td textarea{
+	border-radius: none;
+}

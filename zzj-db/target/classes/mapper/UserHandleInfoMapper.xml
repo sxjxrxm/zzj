@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.UserHandleInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.UserHandleInfo" >
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="LIKE_COUNT" property="likeCount" jdbcType="INTEGER" />
+    <result column="COLLECT_COUNT" property="collectCount" jdbcType="INTEGER" />
+    <result column="SHARE_COUNT" property="shareCount" jdbcType="INTEGER" />
+    <result column="DOWNLOAD_COUNT" property="downloadCount" jdbcType="INTEGER" />
+    <result column="SCAN_COUNT" property="scanCount" jdbcType="INTEGER" />
+  </resultMap>
+  <!--查询用户行为结果数据结构定义-->
+  <resultMap id="ActionResultMap" type="com.zzj.db.model.ActionResultVO" >
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE_NAME" property="busiTypeName" jdbcType="VARCHAR" />
+    <result column="LIKE_COUNT" property="likeCount" jdbcType="INTEGER" />
+    <result column="COLLECT_COUNT" property="collectCount" jdbcType="INTEGER" />
+    <result column="SHARE_COUNT" property="shareCount" jdbcType="INTEGER" />
+    <result column="DOWNLOAD_COUNT" property="downloadCount" jdbcType="INTEGER" />
+    <result column="SCAN_COUNT" property="scanCount" jdbcType="INTEGER" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    TOPIC_CD,TOPIC_NAME,BUSI_TYPE, LIKE_COUNT, COLLECT_COUNT, SHARE_COUNT, DOWNLOAD_COUNT, SCAN_COUNT
+  </sql>
+  <!--根据主键查询User_Handle_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_handle_info
+    where TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除User_Handle_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_handle_info
+    where TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.UserHandleInfo" >
+    insert into user_handle_info (TOPIC_CD, BUSI_TYPE, LIKE_COUNT, 
+      COLLECT_COUNT, SHARE_COUNT, DOWNLOAD_COUNT, 
+      SCAN_COUNT)
+    values (#{topicCd,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{likeCount,jdbcType=INTEGER}, 
+      #{collectCount,jdbcType=INTEGER}, #{shareCount,jdbcType=INTEGER}, #{downloadCount,jdbcType=INTEGER}, 
+      #{scanCount,jdbcType=INTEGER})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.UserHandleInfo" >
+    insert into user_handle_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="topicCd != null" >
+        TOPIC_CD,
+      </if>
+      <if test="busiType != null" >
+        BUSI_TYPE,
+      </if>
+      <if test="likeCount != null" >
+        LIKE_COUNT,
+      </if>
+      <if test="collectCount != null" >
+        COLLECT_COUNT,
+      </if>
+      <if test="shareCount != null" >
+        SHARE_COUNT,
+      </if>
+      <if test="downloadCount != null" >
+        DOWNLOAD_COUNT,
+      </if>
+      <if test="scanCount != null" >
+        SCAN_COUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="topicCd != null" >
+        #{topicCd,jdbcType=VARCHAR},
+      </if>
+      <if test="busiType != null" >
+        #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="likeCount != null" >
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="collectCount != null" >
+        #{collectCount,jdbcType=INTEGER},
+      </if>
+      <if test="shareCount != null" >
+        #{shareCount,jdbcType=INTEGER},
+      </if>
+      <if test="downloadCount != null" >
+        #{downloadCount,jdbcType=INTEGER},
+      </if>
+      <if test="scanCount != null" >
+        #{scanCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新User_Handle_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.UserHandleInfo" >
+    update user_handle_info
+    <set >
+      <if test="busiType != null" >
+        BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="likeCount != null" >
+        LIKE_COUNT = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="collectCount != null" >
+        COLLECT_COUNT = #{collectCount,jdbcType=INTEGER},
+      </if>
+      <if test="shareCount != null" >
+        SHARE_COUNT = #{shareCount,jdbcType=INTEGER},
+      </if>
+      <if test="downloadCount != null" >
+        DOWNLOAD_COUNT = #{downloadCount,jdbcType=INTEGER},
+      </if>
+      <if test="scanCount != null" >
+        SCAN_COUNT = #{scanCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新User_Handle_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.UserHandleInfo" >
+    update user_handle_info
+    set BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      LIKE_COUNT = #{likeCount,jdbcType=INTEGER},
+      COLLECT_COUNT = #{collectCount,jdbcType=INTEGER},
+      SHARE_COUNT = #{shareCount,jdbcType=INTEGER},
+      DOWNLOAD_COUNT = #{downloadCount,jdbcType=INTEGER},
+      SCAN_COUNT = #{scanCount,jdbcType=INTEGER}
+    where TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据条件查询分页记录-->
+  <select id="selectByOption" resultMap="ActionResultMap" parameterType="com.zzj.db.model.ActionJknVO" >
+	SELECT
+      uhi.BUSI_TYPE,mci.CODE_NAME AS BUSI_TYPE_NAME,uhi.TOPIC_CD,uhi.TOPIC_NAME
+      ,uci.collectCount,udi.downloadCount,uli.likeCount,usi.scanCount,ushi.shareCount
+	FROM
+		user_handle_info uhi
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS collectCount FROM
+				 user_collect_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) uci
+		ON uhi.TOPIC_CD = uci.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS downloadCount FROM
+				 user_download_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) udi
+		ON uhi.TOPIC_CD = udi.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS likeCount FROM
+				 user_like_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) uli
+		ON uhi.TOPIC_CD = uli.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS scanCount FROM
+				 user_scan_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) usi
+		ON uhi.TOPIC_CD = usi.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS shareCount FROM
+				 user_share_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) ushi
+		ON uhi.TOPIC_CD = ushi.TOPIC_CD
+	LEFT JOIN
+		mst_code_info mci
+		ON mci.CODE_TYPE = 'busiType' AND
+			 uhi.BUSI_TYPE = mci.`CODE`
+	WHERE
+		uhi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+	  <if test="topicName != null" >		
+		AND uhi.TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%')
+      </if>
+		AND ifnull(uci.collectCount,0) + ifnull(udi.downloadCount,0) + ifnull(uli.likeCount,0) + ifnull(usi.scanCount,0) + ifnull(ushi.shareCount,0) > 0
+	  <if test="field != null" >
+		AND EXISTS 
+		(
+			SELECT TOPIC_CD
+				FROM topic_field_info tfi
+			WHERE
+				tfi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			    AND tfi.TECH_FIELD_CD IN ( ${field} )
+				AND uhi.TOPIC_CD = tfi.TOPIC_CD
+				AND tfi.delete_flag = 0
+		)
+	  </if>
+	order by uhi.TOPIC_CD
+	limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据条件查询总件数-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.ActionJknVO" >
+	SELECT
+		count(uhi.TOPIC_CD)
+	FROM
+		user_handle_info uhi
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS collectCount FROM
+				 user_collect_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) uci
+		ON uhi.TOPIC_CD = uci.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS downloadCount FROM
+				 user_download_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) udi
+		ON uhi.TOPIC_CD = udi.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS likeCount FROM
+				 user_like_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) uli
+		ON uhi.TOPIC_CD = uli.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS scanCount FROM
+				 user_scan_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) usi
+		ON uhi.TOPIC_CD = usi.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS shareCount FROM
+				 user_share_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) ushi
+		ON uhi.TOPIC_CD = ushi.TOPIC_CD
+	WHERE
+		uhi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+	  <if test="topicName != null" >		
+		AND uhi.TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%')
+      </if>
+		AND ifnull(uci.collectCount,0) + ifnull(udi.downloadCount,0) + ifnull(uli.likeCount,0) + ifnull(usi.scanCount,0) + ifnull(ushi.shareCount,0) > 0
+	  <if test="field != null" >
+		AND EXISTS 
+		(
+			SELECT TOPIC_CD
+			FROM topic_field_info tfi
+			WHERE
+				tfi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			    AND tfi.TECH_FIELD_CD IN ( ${field} )
+				AND uhi.TOPIC_CD = tfi.TOPIC_CD
+				AND tfi.delete_flag = 0
+		)
+	  </if>
+  </select>
+  <!--根据条件查询全件输出CSV-->
+  <select id="selectAll" resultMap="ActionResultMap" parameterType="com.zzj.db.model.ActionJknVO" >
+	SELECT
+      uhi.BUSI_TYPE,mci.CODE_NAME AS BUSI_TYPE_NAME,uhi.TOPIC_CD,uhi.TOPIC_NAME
+      ,uci.collectCount,udi.downloadCount,uli.likeCount,usi.scanCount,ushi.shareCount
+	FROM
+		user_handle_info uhi
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS collectCount FROM
+				 user_collect_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) uci
+		ON uhi.TOPIC_CD = uci.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS downloadCount FROM
+				 user_download_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) udi
+		ON uhi.TOPIC_CD = udi.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS likeCount FROM
+				 user_like_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) uli
+		ON uhi.TOPIC_CD = uli.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS scanCount FROM
+				 user_scan_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) usi
+		ON uhi.TOPIC_CD = usi.TOPIC_CD
+	LEFT JOIN
+		(
+			 SELECT TOPIC_CD,count(USER_ID) AS shareCount FROM
+				 user_share_info
+			 WHERE
+			   BUSI_TYPE = #{busiType,jdbcType=VARCHAR} AND
+			   <if test="topicName != null" >
+				 TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%') AND
+			   </if>
+				 HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+			 GROUP BY TOPIC_CD
+		) ushi
+		ON uhi.TOPIC_CD = ushi.TOPIC_CD
+	LEFT JOIN
+		mst_code_info mci
+		ON mci.CODE_TYPE = 'busiType' AND
+			 uhi.BUSI_TYPE = mci.`CODE`
+	WHERE
+		uhi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+	  <if test="topicName != null" >		
+		AND uhi.TOPIC_NAME like CONCAT('%',#{topicName,jdbcType=VARCHAR},'%')
+      </if>
+		AND ifnull(uci.collectCount,0) + ifnull(udi.downloadCount,0) + ifnull(uli.likeCount,0) + ifnull(usi.scanCount,0) + ifnull(ushi.shareCount,0) > 0
+	  <if test="field != null" >
+		AND EXISTS 
+		(
+			SELECT TOPIC_CD
+			FROM topic_field_info tfi
+			WHERE
+				tfi.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+			    AND tfi.TECH_FIELD_CD IN ( ${field} )
+				AND uhi.TOPIC_CD = tfi.TOPIC_CD
+				AND tfi.delete_flag = 0
+		)
+	  </if>
+	order by uhi.TOPIC_CD
+  </select>
+</mapper>

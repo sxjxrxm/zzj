@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstServiceInfoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstServiceInfo" >
+    <result column="PHONE_NO" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="WE_CHAT" property="weChat" jdbcType="VARCHAR" />
+    <result column="QRCODE_ADDRESS" property="qrcodeAddress" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="BIT" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--查询结果数据结构定义-->
+  <sql id="Base_Column_List" >
+    PHONE_NO, EMAIL,WE_CHAT,QRCODE_ADDRESS, MEMO, DELETE_FLAG
+  </sql>
+  <!--有条件的插入指定记录__李善瑞-->
+  <insert id="addSelective" parameterType="com.zzj.db.dto.MstServiceInfo" >
+    insert into mst_service_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="phoneNo != null" >
+        PHONE_NO,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="weChat != null" >
+        WE_CHAT,
+      </if>
+      <if test="qrcodeAddress != null" >
+        QRCODE_ADDRESS,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="phoneNo != null" >
+        #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="weChat != null" >
+        #{weChat,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeAddress != null" >
+        #{qrcodeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=BIT},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstServiceInfo" >
+    insert into mst_service_info (PHONE_NO, EMAIL, WE_CHAT, 
+      QRCODE_ADDRESS, MEMO, DELETE_FLAG, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{phoneNo,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{weChat,jdbcType=VARCHAR}, 
+      #{qrcodeAddress,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=BIT}, 
+      #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstServiceInfo" >
+    insert into mst_service_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="phoneNo != null" >
+        PHONE_NO,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="weChat != null" >
+        WE_CHAT,
+      </if>
+      <if test="qrcodeAddress != null" >
+        QRCODE_ADDRESS,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="phoneNo != null" >
+        #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="weChat != null" >
+        #{weChat,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeAddress != null" >
+        #{qrcodeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=BIT},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--查询原客服数据__李善瑞-->
+  <select id="selectByDelFlag" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.MstServiceInfo" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_service_info AS msi
+	WHERE msi.DELETE_FLAG = 0
+	limit 1
+  </select>
+  <!--根据DELETE_FLAG逻辑删除原数据__李善瑞-->
+  <update id="delByDelFlag" parameterType="com.zzj.db.dto.MstServiceInfo">
+	UPDATE 
+		mst_service_info AS msi
+	SET
+		msi.DELETE_FLAG = '1',
+		msi.UPDATE_ID 	= #{updateId,jdbcType=VARCHAR},
+		msi.UPDATE_TIME	= #{updateTime,jdbcType=TIMESTAMP}
+	WHERE
+		msi.DELETE_FLAG = '0'
+  </update>
+</mapper>

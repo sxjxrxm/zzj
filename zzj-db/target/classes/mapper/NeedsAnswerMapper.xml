@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.NeedsAnswerMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.NeedsAnswer" >
+    <id column="NEEDS_CD" property="needsCd" jdbcType="VARCHAR" />
+    <id column="ANSWER_NO" property="answerNo" jdbcType="TINYINT" />
+    <result column="ANSWER_CONTENT" property="answerContent" jdbcType="VARCHAR" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createName" property="createName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    NEEDS_CD, ANSWER_NO, ANSWER_CONTENT, CREATE_ID, CREATE_TIME
+  </sql>
+  <!--根据主键查询记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.NeedsAnswerKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from needs_answer
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+      and ANSWER_NO = #{answerNo,jdbcType=TINYINT}
+  </select>
+  <!--根据主键查询记录-->
+  <select id="selectMaxAnswerNo" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select 
+      ifnull(max(ANSWER_NO), 0)
+    from needs_answer
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键查询记录-->
+  <select id="selectByNeedsCd" resultMap="BaseResultMap" parameterType="map" >
+    select 
+	    needs_answer.*,
+	    ifnull(ifnull(user.USER_NAME, appUser.USER_NAME), needs_answer.CREATE_ID) as createName
+    from needs_answer
+    left join APP_USERS_INFO appUser on appUser.USER_ID = needs_answer.CREATE_ID
+    left join MST_USERS_INFO user on user.USER_ID = needs_answer.CREATE_ID
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+    order by CREATE_TIME DESC
+    limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据主键查询记录-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="map">
+    select 
+    count(*)
+    from needs_answer
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除记录-->
+  <delete id="deleteByPrimaryKey" parameterType="com.zzj.db.dto.NeedsAnswerKey" >
+    delete from needs_answer
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+      and ANSWER_NO = #{answerNo,jdbcType=TINYINT}
+  </delete>
+  <!--插入记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.NeedsAnswer" >
+    insert into needs_answer (NEEDS_CD, ANSWER_NO, ANSWER_CONTENT, 
+      CREATE_ID, CREATE_TIME)
+    values (#{needsCd,jdbcType=VARCHAR}, #{answerNo,jdbcType=TINYINT}, #{answerContent,jdbcType=VARCHAR}, 
+      #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--插入记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.NeedsAnswer" >
+    insert into needs_answer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="needsCd != null" >
+        NEEDS_CD,
+      </if>
+      <if test="answerNo != null" >
+        ANSWER_NO,
+      </if>
+      <if test="answerContent != null" >
+        ANSWER_CONTENT,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="needsCd != null" >
+        #{needsCd,jdbcType=VARCHAR},
+      </if>
+      <if test="answerNo != null" >
+        #{answerNo,jdbcType=TINYINT},
+      </if>
+      <if test="answerContent != null" >
+        #{answerContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据主键更新记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.NeedsAnswer" >
+    update needs_answer
+    <set >
+      <if test="answerContent != null" >
+        ANSWER_CONTENT = #{answerContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+      and ANSWER_NO = #{answerNo,jdbcType=TINYINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.NeedsAnswer" >
+    update needs_answer
+    set ANSWER_CONTENT = #{answerContent,jdbcType=VARCHAR},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where NEEDS_CD = #{needsCd,jdbcType=VARCHAR}
+      and ANSWER_NO = #{answerNo,jdbcType=TINYINT}
+  </update>
+</mapper>

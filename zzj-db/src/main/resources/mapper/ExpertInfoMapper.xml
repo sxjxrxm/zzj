@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.ExpertInfoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.ExpertInfo" >
+    <id column="EXPERT_ID" property="expertId" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME" property="expertName" jdbcType="VARCHAR" />
+    <result column="RANK" property="rank" jdbcType="VARCHAR" />
+    <result column="RANK2" property="rank2" jdbcType="VARCHAR" />
+    <result column="RANK3" property="rank3" jdbcType="VARCHAR" />
+    <result column="RANK4" property="rank4" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="CITY_P" property="cityP" jdbcType="VARCHAR" />
+    <result column="CITY_C" property="cityC" jdbcType="VARCHAR" />
+    <result column="CITY_D" property="cityD" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="BACKGROUND_ADRESS" property="backgroundAdress" jdbcType="VARCHAR" />
+    <result column="SHARE_URL" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="TINYINT" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zzj.db.dto.ExpertInfo" extends="BaseResultMap" >
+    <result column="EXPERT_BRIEF" property="expertBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <!-- 专家编辑/添加页面使用的数据结构 -->
+  <resultMap id="ExpertEditResultMap" type="com.zzj.db.model.ExpertInfoEditVO" >
+    <result column="EXPERT_ID" property="expertId" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME" property="expertName" jdbcType="VARCHAR" />
+    <result column="AVATOR_ADDRESS" property="avatorAddress" jdbcType="VARCHAR" />
+    <result column="RANK" property="rank" jdbcType="VARCHAR" />
+    <result column="RANK2" property="rank2" jdbcType="VARCHAR" />
+    <result column="RANK3" property="rank3" jdbcType="VARCHAR" />
+    <result column="RANK4" property="rank4" jdbcType="VARCHAR" />
+    <result column="EXPERIENCE" property="experience" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="CITY_P" property="cityP" jdbcType="VARCHAR" />
+    <result column="CITY_C" property="cityC" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="COMPANY" property="company" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="BACKGROUND_ADRESS" property="backgroundAdress" jdbcType="VARCHAR" />
+    <result column="SHARE_URL" property="shareUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ExpertEditResultMap2" type="com.zzj.db.model.ExpertInfoEditVO" extends="ExpertEditResultMap" >
+    <result column="EXPERT_BRIEF" property="expertBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="RecommendInfoMap" type="com.zzj.db.dto.RecommendInfo" >
+    <id column="RECOMMEND_KBN" property="recommendKbn" jdbcType="TINYINT" />
+  </resultMap>
+  <resultMap id="FieldMap" type="com.zzj.db.dto.TopicFieldInfoKey" >
+    <id column="TECH_FIELD_CD" property="techFieldCd" jdbcType="VARCHAR" />
+    <id column="RSCH_FIELD_CD" property="rschFieldCd" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 专家一览页面使用的专家基础信息 -->
+  <resultMap id="ExpertInfoListMap" type="com.zzj.db.model.ExpertInfoListVO" >
+    <result column="EXPERT_ID" property="expertId" jdbcType="VARCHAR" />
+    <result column="EXPERT_NAME" property="expertName" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="LIKE_COUNT" property="userHandleInfo.likeCount" jdbcType="INTEGER" />
+    <result column="COLLECT_COUNT" property="userHandleInfo.collectCount" jdbcType="INTEGER" />
+    <result column="SCAN_COUNT" property="userHandleInfo.scanCount" jdbcType="INTEGER" />
+    <result column="DOWNLOAD_COUNT" property="userHandleInfo.downloadCount" jdbcType="INTEGER" />
+    <result column="TOP_FLAG" property="topFlag" jdbcType="VARCHAR" />
+    <!--<collection property="recommendKbn" ofType="RecommendInfo" resultMap="RecommendInfoMap"/>
+    <collection property="fieldCd" ofType="TopicFieldInfoKey" resultMap="FieldMap"/>-->
+  </resultMap>
+  <resultMap id="ExpertInfoListMap2" type="com.zzj.db.model.ExpertInfoListVO" extends="ExpertInfoListMap" >
+    <result column="EXPERT_BRIEF" property="expertBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    EXPERT_ID, EXPERT_NAME, RANK, RANK2, RANK3, RANK4, EXPERIENCE, EMAIL, CITY_P, CITY_D, CITY_C, PHONE, STATUS, REFUSE_MEMO, 
+    SHARE_URL, COMPANY, AUDIT_ID, AUDIT_TIME, BACKGROUND_ADRESS,
+    DELETE_FLAG, TOP_FLAG,  KEYWORD, CREATE_ID, CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    EXPERT_BRIEF
+  </sql>
+  <sql id="ExpertEdit_Column_List" >
+    EXPERT_ID, EXPERT_NAME, RANK, RANK2, RANK3, RANK4, EXPERIENCE, EMAIL, CITY_P, CITY_C, PHONE, STATUS, REFUSE_MEMO, EXPERT_BRIEF, BACKGROUND_ADRESS,SHARE_URL, COMPANY
+  </sql>
+  
+  <!--根据专家一览页面条件带分页查询Expert_Info表中指定记录************-->
+  <select id="selectSelectiveByPage" resultMap="ExpertInfoListMap" parameterType="map" >
+    select 
+		e.EXPERT_ID as EXPERT_ID, 
+		e.EXPERT_NAME as EXPERT_NAME, 
+		e.STATUS as STATUS,
+    	nh.LIKE_COUNT as LIKE_COUNT,
+    	nh.COLLECT_COUNT as COLLECT_COUNT,
+    	nh.SCAN_COUNT as SCAN_COUNT,
+    	nh.DOWNLOAD_COUNT as DOWNLOAD_COUNT,
+    	e.UPDATE_TIME,
+    	e.CREATE_TIME
+	from expert_info e
+	left join (select * from topic_field_info where BUSI_TYPE = '01' and DELETE_FLAG = 0) t 
+ 		on t.TOPIC_CD = e.EXPERT_ID
+	left join (select * from recommend_info where BUSI_TYPE = '01' and DELETE_FLAG = 0) r
+ 		on r.TOPIC_CD = e.EXPERT_ID
+ 	left join user_handle_info nh
+ 		on nh.TOPIC_CD = e.EXPERT_ID
+    <where>
+    	e.DELETE_FLAG = 0
+      <if test="expertId != null" >
+        and e.EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+      </if>
+      <if test="expertName != null" >
+        and e.EXPERT_NAME like CONCAT('%',#{expertName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="auditStatus != null" >
+        AND e.STATUS in
+		<foreach item="item" index="index" collection="auditStatus" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="techField != null" >
+        AND t.TECH_FIELD_CD in
+		<foreach item="item" index="index" collection="techField" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="recommendKbn != null" >
+        AND r.RECOMMEND_KBN in
+		<foreach item="item" index="index" collection="recommendKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+    </where>
+    group by e.EXPERT_ID
+	order by e.UPDATE_TIME desc, e.CREATE_TIME desc
+	limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  
+  <!--根据专家一览页面条件查询Expert_Info表中所有记录************-->
+  <select id="selectAll" resultMap="ExpertInfoListMap2" parameterType="map" >
+    select 
+		e.EXPERT_ID as EXPERT_ID, 
+		e.EXPERT_NAME as EXPERT_NAME, 
+		e.STATUS as STATUS,
+		e.EXPERT_BRIEF,
+    	nh.LIKE_COUNT as LIKE_COUNT,
+    	nh.COLLECT_COUNT as COLLECT_COUNT,
+    	nh.SCAN_COUNT as SCAN_COUNT,
+    	nh.DOWNLOAD_COUNT as DOWNLOAD_COUNT,
+    	e.UPDATE_TIME,
+    	e.CREATE_TIME
+	from expert_info e
+	left join (select * from topic_field_info where BUSI_TYPE = '01' and DELETE_FLAG = 0) t 
+ 		on t.TOPIC_CD = e.EXPERT_ID
+	left join (select * from recommend_info where BUSI_TYPE = '01' and DELETE_FLAG = 0) r
+ 		on r.TOPIC_CD = e.EXPERT_ID
+ 	left join user_handle_info nh
+ 		on nh.TOPIC_CD = e.EXPERT_ID
+    <where>
+    	e.DELETE_FLAG = 0
+      <if test="expertId != null" >
+        and e.EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+      </if>
+      <if test="expertName != null" >
+        and e.EXPERT_NAME like CONCAT('%',#{expertName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="auditStatus != null" >
+        AND e.STATUS in
+		<foreach item="item" index="index" collection="auditStatus" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="techField != null" >
+        AND t.TECH_FIELD_CD in
+		<foreach item="item" index="index" collection="techField" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="recommendKbn != null" >
+        AND r.RECOMMEND_KBN in
+		<foreach item="item" index="index" collection="recommendKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+    </where>
+    group by e.EXPERT_ID
+	order by e.UPDATE_TIME desc, e.CREATE_TIME desc
+  </select>
+  
+  <!--按条件查询专家总记录数**********-->
+  <select id="selectTotalCount" resultType="java.lang.Integer"  parameterType="map">
+    select count(*) from (
+    select e.EXPERT_ID
+    from expert_info e
+	left join (select * from topic_field_info where BUSI_TYPE = '01' and DELETE_FLAG = 0) t 
+ 		on t.TOPIC_CD = e.EXPERT_ID
+	left join (select * from recommend_info where BUSI_TYPE = '01' and DELETE_FLAG = 0) r
+ 		on r.TOPIC_CD = e.EXPERT_ID
+    <where>
+    	e.DELETE_FLAG = 0
+      <if test="expertName != null" >
+        and e.EXPERT_NAME like CONCAT('%',#{expertName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="auditStatus != null" >
+        AND e.STATUS in
+		<foreach item="item" index="index" collection="auditStatus" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="techField != null" >
+        AND t.TECH_FIELD_CD in
+		<foreach item="item" index="index" collection="techField" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+      <if test="recommendKbn != null" >
+        AND r.RECOMMEND_KBN in
+		<foreach item="item" index="index" collection="recommendKbn" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+      </if>
+    </where>
+    group by e.EXPERT_ID ) m
+  </select>
+  
+  <!--根据主键查询Expert_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="ExpertEditResultMap2" parameterType="java.lang.String" >
+    select 
+    AVATOR as AVATOR_ADDRESS,
+    <include refid="ExpertEdit_Column_List" />
+    from expert_info e
+    left join app_users_info on USER_ID = EXPERT_ID
+    where e.DELETE_FLAG = 0 
+    	and EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  </select>
+  <!--根据专家姓名查找对应专家id*******************-->
+  <select id="selectIdByExpertName" resultType="string" parameterType="java.lang.String" >
+    select EXPERT_ID
+    from expert_info
+    where DELETE_FLAG = 0 
+    	and EXPERT_NAME = #{expertName,jdbcType=VARCHAR}
+  </select>
+  <!--根据专家id获得专家姓名*******************-->
+  <select id="selectNameByExpertId" resultType="string" parameterType="java.lang.String" >
+    select EXPERT_NAME
+    from expert_info
+    where DELETE_FLAG = 0 
+    	and EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  </select>
+  <!--查询Expert_Info表中所有专家姓名*******************-->
+  <select id="selectAllExpertName" resultType="string">
+    select EXPERT_NAME
+    from expert_info
+    where DELETE_FLAG = 0 
+  </select>
+  <!--根据主键删除Expert_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from expert_info
+    where EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.ExpertInfo" >
+    insert into expert_info (EXPERT_ID, EXPERT_NAME, RANK, RANK2, RANK3, RANK4, 
+      EXPERIENCE, EMAIL, CITY_P, CITY_C, CITY_D, PHONE,
+      STATUS, REFUSE_MEMO, EXPERT_BRIEF, BACKGROUND_ADRESS, SHARE_URL, COMPANY, KEYWORD, AUDIT_ID, AUDIT_TIME, 
+      DELETE_FLAG, TOP_FLAG, CREATE_ID, CREATE_TIME, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{expertId,jdbcType=VARCHAR}, #{expertName,jdbcType=VARCHAR}, 
+      #{rank,jdbcType=VARCHAR}, #{rank2,jdbcType=VARCHAR}, #{rank3,jdbcType=VARCHAR}, #{rank4,jdbcType=VARCHAR}, 
+      #{experience,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{cityP,jdbcType=VARCHAR}, #{cityC,jdbcType=VARCHAR}, #{cityD,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{refuseMemo,jdbcType=VARCHAR}, #{expertBrief,jdbcType=LONGVARCHAR}, #{backgroundAdress, jdbcType=VARCHAR},
+      #{shareUrl,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},
+      #{keyword,jdbcType=VARCHAR}, #{auditId,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=TINYINT}, #{topFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.ExpertInfo" >
+    insert into expert_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="expertId != null" >
+        EXPERT_ID,
+      </if>
+      <if test="expertName != null" >
+        EXPERT_NAME,
+      </if>
+      <if test="rank != null" >
+        RANK,
+      </if>
+      <if test="rank2 != null" >
+        RANK2,
+      </if>
+      <if test="rank3 != null" >
+        RANK3,
+      </if>
+      <if test="rank4 != null" >
+        RANK4,
+      </if>
+      <if test="experience != null" >
+        EXPERIENCE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="cityP != null" >
+        CITY_P,
+      </if>
+      <if test="cityC != null" >
+        CITY_C,
+      </if>
+      <if test="cityD != null" >
+        CITY_D,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO,
+      </if>
+      <if test="expertBrief != null" >
+        EXPERT_BRIEF,
+      </if>
+      <if test="backgroundAdress">
+      	BACKGROUND_ADRESS,
+      </if>
+      <if test="shareUrl != null" >
+        SHARE_URL,
+      </if>
+      <if test="company != null" >
+        COMPANY,
+      </if>
+      <if test="keyword != null" >
+        KEYWORD,
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID,
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="expertId != null" >
+        #{expertId,jdbcType=VARCHAR},
+      </if>
+      <if test="expertName != null" >
+        #{expertName,jdbcType=VARCHAR},
+      </if>
+      <if test="rank != null" >
+        #{rank,jdbcType=VARCHAR},
+      </if>
+      <if test="rank2 != null" >
+        #{rank2,jdbcType=VARCHAR},
+      </if>
+      <if test="rank3 != null" >
+        #{rank3,jdbcType=VARCHAR},
+      </if>
+      <if test="rank4 != null" >
+        #{rank4,jdbcType=VARCHAR},
+      </if>
+      <if test="experience != null" >
+        #{experience,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="cityP != null" >
+        #{cityP,jdbcType=VARCHAR},
+      </if>
+      <if test="cityC != null" >
+        #{cityC,jdbcType=VARCHAR},
+      </if>
+      <if test="cityD != null" >
+        #{cityD,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="refuseMemo != null" >
+        #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="expertBrief != null" >
+        #{expertBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="backgroundAdress != null" >
+        #{backgroundAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="auditId != null" >
+        #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="topFlag != null" >
+        #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Expert_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.ExpertInfo" >
+    update expert_info
+    <set >
+      <if test="expertName != null" >
+        EXPERT_NAME = #{expertName,jdbcType=VARCHAR},
+      </if>
+      <if test="rank != null" >
+        RANK = #{rank,jdbcType=VARCHAR},
+      </if>
+      <if test="rank2 != null" >
+        RANK2 = #{rank2,jdbcType=VARCHAR},
+      </if>
+      <if test="rank3 != null" >
+        RANK3 = #{rank3,jdbcType=VARCHAR},
+      </if>
+      <if test="rank4 != null" >
+        RANK4 = #{rank4,jdbcType=VARCHAR},
+      </if>
+      <if test="experience != null" >
+        EXPERIENCE = #{experience,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="cityP != null" >
+        CITY_P = #{cityP,jdbcType=VARCHAR},
+      </if>
+      <if test="cityC != null" >
+        CITY_C = #{cityC,jdbcType=VARCHAR},
+      </if>
+      <if test="cityD != null" >
+        CITY_D = #{cityD,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        KEYWORD = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="expertBrief != null" >
+        EXPERT_BRIEF = #{expertBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="backgroundAdress != null" >
+        BACKGROUND_ADRESS = #{backgroundAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        SHARE_URL = #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        COMPANY = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Expert_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.ExpertInfo" >
+    update expert_info
+    set EXPERT_NAME = #{expertName,jdbcType=VARCHAR},
+      RANK = #{rank,jdbcType=VARCHAR},
+      RANK2 = #{rank2,jdbcType=VARCHAR},
+      RANK3 = #{rank3,jdbcType=VARCHAR},
+      RANK4 = #{rank4,jdbcType=VARCHAR},
+      EXPERIENCE = #{experience,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      CITY_P = #{cityP,jdbcType=VARCHAR},
+      CITY_D = #{cityD,jdbcType=VARCHAR},
+      CITY_C = #{cityC,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      KEYWORD = #{keyword,jdbcType=VARCHAR},
+      EXPERT_BRIEF = #{expertBrief,jdbcType=LONGVARCHAR},
+      BACKGROUND_ADRESS = #{backgroundAdress,jdbcType=VARCHAR},
+      SHARE_URL = #{shareUrl,jdbcType=VARCHAR},
+      COMPANY = #{company,jdbcType=VARCHAR},
+      AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  </update>
+  <!--根据TopicFieldInfo查询Expert_Info中指定记录-->
+  <select id="slideEditSearch" resultMap="ExpertEditResultMap" parameterType="com.zzj.db.model.SlideResultVO" >
+  	select 
+    <include refid="ExpertEdit_Column_List" />
+    from expert_info
+    where
+    EXPERT_ID in (
+	    select TOPIC_CD 
+	    from topic_field_info 
+	    where DELETE_FLAG = 0
+	    <if test="slideResultBusi != null" >
+	    and BUSI_TYPE = #{slideResultBusi,jdbcType=VARCHAR}
+	    </if>
+	    <if test="techField != 'null'" > 
+	    and TECH_FIELD_CD = #{techField,jdbcType=VARCHAR}
+	    </if>
+    ) 
+    <if test="slideResultTopic != null" >
+    and EXPERT_NAME like CONCAT('%',#{slideResultTopic,jdbcType=VARCHAR},'%')
+    </if>
+    and DELETE_FLAG = '0'
+  </select>
+   <select id="selectIsExpertById" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+    	1
+    from 
+    	expert_info
+    where 
+    	DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT}
+    and 
+    	EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  </select>
+  <!-- 取得专家相关信息 -->
+  <select id="selectExpertInfo" resultMap="ExpertEditResultMap2" parameterType="java.lang.String">
+  	select exp.EXPERT_ID, exp.EXPERT_NAME, exp.RANK, exp.RANK2, exp.RANK3, exp.RANK4,
+  	       exp.EXPERT_BRIEF,exp.BACKGROUND_ADRESS,user.AVATOR AS AVATOR_ADDRESS
+  	  from EXPERT_INFO exp
+ left join APP_USERS_INFO user
+        on user.USER_ID = exp.EXPERT_ID
+       and user.DELETE_FLAG = 0
+  	 where EXPERT_ID = #{expertId,jdbcType=VARCHAR}
+  	   and exp.DELETE_FLAG = 0
+  </select>
+</mapper>

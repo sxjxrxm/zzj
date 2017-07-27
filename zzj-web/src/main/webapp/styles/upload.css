@@ -1,0 +1,75 @@
+#uploadSpan,#chapterSpan,#uploadImg,#uploadImg2 {
+	font-size: 12px;
+	overflow: hidden;
+	position: absolute
+}
+#chapterSpan{
+	margin-top: -4px;
+}
+#file {
+	position: absolute;
+	z-index: 100;
+	margin-left: -180px;
+	font-size: 60px;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	margin-top: -5px;
+}
+
+.img {
+	width: 192px;
+	height: 148px;
+}
+
+#preview{
+	width: 202px;
+	height: 168px;
+	float: left;
+}
+
+#preview2 {
+	width: 370px;
+	height: 226px;
+	float: left;
+}
+
+.avator_img {
+	width: 120px;
+	height: 120px;
+}
+
+.QRCode_img {
+	width: 200px;
+	height: 200px;
+}
+
+.bigIcon_img {
+	width: 360px;
+	height: 206px;
+}
+
+.slide_img {
+	width: 320px;
+	height: 180px;
+}
+
+#avatorAddress_preview {
+	width: 120px;
+	height: 140px;
+	float: left;
+}
+
+.d {
+	float: left;
+	padding-left: 52px;
+}
+
+#bt,#bt2,#bt3 {
+	padding-top: 90px;
+}
+
+#apkData,#video, #chapter, #imgData, #littleIconImgData, #bigIconImgData,#backimgData {
+	visibility: none;
+	height: 0;
+	width: 0;
+}

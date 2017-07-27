@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstFieldInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstFieldInfo" >
+    <id column="TECH_FIELD_CD" property="techFieldCd" jdbcType="VARCHAR" />
+    <id column="RSCH_FIELD_CD" property="rschFieldCd" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="TopicFieldInfoResultMap" type="com.zzj.db.dto.TopicFieldInfoKey" >
+    <id column="TECH_FIELD_CD" property="techFieldCd" jdbcType="VARCHAR" />
+    <id column="RSCH_FIELD_CD" property="rschFieldCd" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    TECH_FIELD_CD, RSCH_FIELD_CD, DELETE_FLAG, UPDATE_TIME
+  </sql>
+   <!--根据主键查询Mst_Field_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.MstFieldInfoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_field_info
+    where TECH_FIELD_CD = #{techFieldCd,jdbcType=VARCHAR}
+      and RSCH_FIELD_CD = #{rschFieldCd,jdbcType=VARCHAR}
+  </select>
+  <!--查询Mst_Field_Info表中所有记录-->
+  <select id="selectAll" resultMap="TopicFieldInfoResultMap">
+    select TECH_FIELD_CD, RSCH_FIELD_CD
+    from mst_field_info
+    where DELETE_FLAG = 0
+  </select>
+  <!--根据主键查询Mst_Field_Info表中指定记录-->
+  <select id="selectByField" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from mst_field_info
+    where TECH_FIELD_CD = #{techFieldCd,jdbcType=VARCHAR}
+      and DELETE_FLAG = 0
+  </select>
+  <!--根据主键删除Mst_Field_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="com.zzj.db.dto.MstFieldInfoKey" >
+    delete from mst_field_info
+    where TECH_FIELD_CD = #{techFieldCd,jdbcType=VARCHAR}
+      and RSCH_FIELD_CD = #{rschFieldCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstFieldInfo" >
+    insert into mst_field_info (TECH_FIELD_CD, RSCH_FIELD_CD, DELETE_FLAG, 
+      UPDATE_TIME)
+    values (#{techFieldCd,jdbcType=VARCHAR}, #{rschFieldCd,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=TINYINT}, 
+      now())
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstFieldInfo" >
+    insert into mst_field_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="techFieldCd != null" >
+        TECH_FIELD_CD,
+      </if>
+      <if test="rschFieldCd != null" >
+        RSCH_FIELD_CD,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="techFieldCd != null" >
+        #{techFieldCd,jdbcType=VARCHAR},
+      </if>
+      <if test="rschFieldCd != null" >
+        #{rschFieldCd,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Mst_Field_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstFieldInfo" >
+    update mst_field_info
+    <set >
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TECH_FIELD_CD = #{techFieldCd,jdbcType=VARCHAR}
+      and RSCH_FIELD_CD = #{rschFieldCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Mst_Field_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstFieldInfo" >
+    update mst_field_info
+    set DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      UPDATE_TIME = now()
+    where TECH_FIELD_CD = #{techFieldCd,jdbcType=VARCHAR}
+      and RSCH_FIELD_CD = #{rschFieldCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Mst_Field_Info中指定记录-->
+  <update id="updateByTechField" parameterType="java.lang.String" >
+    update mst_field_info
+    set DELETE_FLAG = 1,
+      UPDATE_TIME = now()
+    where TECH_FIELD_CD = #{techFieldCd,jdbcType=VARCHAR}
+  </update>
+</mapper>

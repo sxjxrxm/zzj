@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.MstScreenInfoMapper" >
+  <!-- 查询结果定义 -->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.MstScreenInfo" >
+    <id column="SCREEN_ID" property="screenId" jdbcType="VARCHAR" />
+    <id column="PARENT_SCREEN_ID" property="parentScreenId" jdbcType="VARCHAR" />
+    <result column="SCREEN_NAME" property="screenName" jdbcType="VARCHAR" />
+    <result column="LINK_URL" property="linkUrl" jdbcType="VARCHAR" />
+    <result column="MENU_SHOW_FLAG" property="menuShowFlag" jdbcType="BIT" />
+    <result column="DISPLAY_ORDER" property="displayOrder" jdbcType="TINYINT" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="BIT" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 查询字段定义 -->
+  <sql id="Base_Column_List" >
+    SCREEN_ID, PARENT_SCREEN_ID, SCREEN_NAME, LINK_URL, MENU_SHOW_FLAG, DISPLAY_ORDER, 
+    DELETE_FLAG, UPDATE_TIME
+  </sql>
+  <!-- 根据主键查找指定记录 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.MstScreenInfoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_screen_info
+    where SCREEN_ID = #{screenId,jdbcType=VARCHAR}
+      and PARENT_SCREEN_ID = #{parentScreenId,jdbcType=VARCHAR}
+  </select>
+  <!-- 查找全部记录 -->
+  <select id="selectAllScreen" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from mst_screen_info
+    ORDER BY DISPLAY_ORDER ASC
+  </select>
+  <!-- 根据主键删除指定记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="com.zzj.db.dto.MstScreenInfoKey" >
+    delete from mst_screen_info
+    where SCREEN_ID = #{screenId,jdbcType=VARCHAR}
+      and PARENT_SCREEN_ID = #{parentScreenId,jdbcType=VARCHAR}
+  </delete>
+  <!-- 根据插入指定记录 -->
+  <insert id="insert" parameterType="com.zzj.db.dto.MstScreenInfo" >
+    insert into mst_screen_info (SCREEN_ID, PARENT_SCREEN_ID, SCREEN_NAME, 
+      LINK_URL, MENU_SHOW_FLAG, DISPLAY_ORDER, 
+      DELETE_FLAG, UPDATE_TIME)
+    values (#{screenId,jdbcType=VARCHAR}, #{parentScreenId,jdbcType=VARCHAR}, #{screenName,jdbcType=VARCHAR}, 
+      #{linkUrl,jdbcType=VARCHAR}, #{menuShowFlag,jdbcType=BIT}, #{displayOrder,jdbcType=TINYINT}, 
+      #{deleteFlag,jdbcType=BIT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- 根据有条件地插入指定记录 -->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.MstScreenInfo" >
+    insert into mst_screen_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="screenId != null" >
+        SCREEN_ID,
+      </if>
+      <if test="parentScreenId != null" >
+        PARENT_SCREEN_ID,
+      </if>
+      <if test="screenName != null" >
+        SCREEN_NAME,
+      </if>
+      <if test="linkUrl != null" >
+        LINK_URL,
+      </if>
+      <if test="menuShowFlag != null" >
+        MENU_SHOW_FLAG,
+      </if>
+      <if test="displayOrder != null" >
+        DISPLAY_ORDER,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="screenId != null" >
+        #{screenId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentScreenId != null" >
+        #{parentScreenId,jdbcType=VARCHAR},
+      </if>
+      <if test="screenName != null" >
+        #{screenName,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null" >
+        #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuShowFlag != null" >
+        #{menuShowFlag,jdbcType=BIT},
+      </if>
+      <if test="displayOrder != null" >
+        #{displayOrder,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=BIT},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!-- 根据主键，有条件地更新指定记录 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.MstScreenInfo" >
+    update mst_screen_info
+    <set >
+      <if test="screenName != null" >
+        SCREEN_NAME = #{screenName,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null" >
+        LINK_URL = #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuShowFlag != null" >
+        MENU_SHOW_FLAG = #{menuShowFlag,jdbcType=BIT},
+      </if>
+      <if test="displayOrder != null" >
+        DISPLAY_ORDER = #{displayOrder,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=BIT},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SCREEN_ID = #{screenId,jdbcType=VARCHAR}
+      and PARENT_SCREEN_ID = #{parentScreenId,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据主键更新指定记录 -->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.MstScreenInfo" >
+    update mst_screen_info
+    set SCREEN_NAME = #{screenName,jdbcType=VARCHAR},
+      LINK_URL = #{linkUrl,jdbcType=VARCHAR},
+      MENU_SHOW_FLAG = #{menuShowFlag,jdbcType=BIT},
+      DISPLAY_ORDER = #{displayOrder,jdbcType=TINYINT},
+      DELETE_FLAG = #{deleteFlag,jdbcType=BIT},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where SCREEN_ID = #{screenId,jdbcType=VARCHAR}
+      and PARENT_SCREEN_ID = #{parentScreenId,jdbcType=VARCHAR}
+  </update>
+  
+  <!--查询指定角色的访问权限列表-->
+  <select id="selectRolePermission" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+      msi.SCREEN_ID,
+      msi.SCREEN_NAME,
+      msi.PARENT_SCREEN_ID,
+      msi.LINK_URL,
+      msi.MENU_SHOW_FLAG,
+      msi.DISPLAY_ORDER
+    from mst_permission_info mpi
+    left join mst_screen_info msi
+    on mpi.screen_id = msi.screen_id
+    where mpi.ROLE_ID = #{roleId,jdbcType=VARCHAR}
+      and msi.DELETE_FLAG = 0
+    order by msi.DISPLAY_ORDER ASC
+  </select>
+</mapper>

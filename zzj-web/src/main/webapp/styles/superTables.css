@@ -1,0 +1,95 @@
+/*
+///////////////////////////////////////////////////////////////////////////////////////// 
+// SUPER TABLES - VERSION 0.25 - MIT Style License
+// Copyright (c) 2008 MATT MURPHY --- visit www.matts411.com
+///////////////////////////////////////////////////////////////////////////////////////// 
+// DEFAULT SKIN
+///////////////////////////////////////////////////////////////////////////////////////// 
+*/
+
+.tb,.tbform {
+    border-collapse: collapse;
+    border-spacing: 2px;
+    white-space: nowrap;
+    border-radius: 3px;
+    width: 99%;
+    margin-bottom: 8px;
+} 
+
+table thead tr td {
+    padding: 15px 0;
+}
+.tr {
+    font-weight:bold;
+    color:#04408C;
+    font-size: 12px;
+    border-color: #99bce8;
+    border-width: 1px;
+    border-style: solid;
+    height:25px;
+    background-image: none;
+    background-color: #cbddf3;
+    background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#dae7f6),color-stop(45%,#cddef3),color-stop(46%,#abc7ec),color-stop(50%,#abc7ec),color-stop(51%,#b8cfee),color-stop(100%,#cbddf3));
+    background-image: -webkit-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
+    background-image: -moz-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
+    background-image: -o-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
+    background-image: -ms-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
+    background-image: linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
+    -webkit-box-shadow: #f4f8fd 0 1px 0 0 inset;
+    -moz-box-shadow: #f4f8fd 0 1px 0 0 inset;
+    box-shadow: #f4f8fd 0 1px 0 0 inset;
+}
+
+.tb th, .tb td,.tbform td,.tbform th{
+    border: 1px solid #DEE1E6;
+    padding: 0 10px;
+}
+
+.tb th, .tb td {
+    max-width: 215px;
+    TEXT-OVERFLOW: ellipsis;
+    overflow: hidden;
+}
+
+.tb th {
+    height:28px;
+    background: #E7EBEF url(../images/header.png) repeat-x 0 0;
+    border: #DEE1E6 1px solid;
+}
+
+.tb td {
+    height: 22px;
+}
+
+.thCss {
+    background-color: #CCC;
+}
+
+.treven {
+    background-color: #FFF;
+}
+
+.trodd ,.tbform .tdl{
+    background-color:#F3F4F8;
+}
+
+.tractive {
+    background-color: #E2ECF7;
+}
+
+.tb input, .tb textarea {
+    width: auto;
+}
+
+.tb .tdl {
+    background: #efefef;
+    color: #323D53;
+} 
+.tbform td,.tbform th{padding:3px 10px;max-width:none;margin-left:0;}
+#pagelink {padding:5px 10px;text-align:right;}
+#pagelink a{border:1px solid #CCC;margin:2px 3px;padding:3px 6px;cursor:pointer;background:#efefef;}
+#pagelink a.current{cursor:default;background:#06C;color:#FFF;}
+#pagelink a.navpage{cursor:default;border:none;background:none;}
+#pagelink a.navpage:hover{cursor:default;border:none;background:none;color:#000;}
+#pagelink a:hover{background:#06C;color:#FFF;}
+

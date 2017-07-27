@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.QuestionInfoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.QuestionInfo" >
+    <id column="QUESTION_CD" property="questionCd" jdbcType="VARCHAR" />
+    <result column="QUESTION_NAME" property="questionName" jdbcType="VARCHAR" />
+    <result column="QUESTION_CONTENT" property="questionContent" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyWord" jdbcType="VARCHAR" />    
+    <result column="TOP_FLAG" property="topFlag" jdbcType="VARCHAR" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--查询结果数据结构定义-->
+  <resultMap id="QuestionVO" type="com.zzj.db.model.QuestionVO" >
+    <id column="QUESTION_CD" property="questionCd" jdbcType="VARCHAR" />
+    <result column="QUESTION_NAME" property="questionName" jdbcType="VARCHAR" />
+    <result column="QUESTION_CONTENT" property="questionContent" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="TINYINT" />
+    <result column="REFUSE_MEMO" property="refuseMemo" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyWord" jdbcType="VARCHAR" />    
+    <result column="TOP_FLAG" property="topFlag" jdbcType="VARCHAR" />
+    <result column="AUDIT_ID" property="auditId" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="answerStr" property="answerStr" jdbcType="VARCHAR" />
+    <result column="statusStr" property="statusStr" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    QUESTION_CD, QUESTION_NAME, QUESTION_CONTENT, STATUS, AUDIT_ID, AUDIT_TIME, DELETE_FLAG, 
+    REFUSE_MEMO, KEYWORD, TOP_FLAG, CREATE_ID, CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <!--E问一览条件筛选__李善瑞-->
+  <select id="searchQuestionList" resultMap="QuestionVO" parameterType="com.zzj.db.model.QuestionVO" >
+  	SELECT
+		QI.*
+		,mc2.CODE_NAME as statusStr
+		,mc3.CODE_NAME as answerStr
+	FROM
+	(	SELECT
+			QUESTION_CD,
+			QUESTION_NAME,
+			case
+				when (
+					select count(*)
+					from question_answer qa
+					where qa.QUESTION_CD = question_info.QUESTION_CD
+				) > 0 then '1'
+				else 0 
+			END AS answer,
+			UPDATE_TIME,
+			CREATE_TIME,
+			STATUS
+		FROM
+			question_info
+		WHERE
+		 <!--E问删除过滤-->
+		 DELETE_FLAG = 0
+		 <!--主题-->
+		 <if test="questionName != null and questionName != ''">
+		 	AND QUESTION_NAME like concat('%',#{questionName,jdbcType=VARCHAR},'%')
+		 </if>		
+		 <!--审核状态-->
+		 <if test="statusList != null and statusList != '' and statusList.size() != 0">
+		 	AND
+		 	 <foreach collection="statusList" item="item" index="index" open="(" separator="or" close=")"  >
+			    STATUS = #{item}
+			</foreach>
+		 </if>
+		<!--提出时间-->
+		 <if test="sDate != null and sDate != ''">		 	
+		 	AND CREATE_TIME &gt;= #{sDate,jdbcType=VARCHAR}		 	
+		 </if>
+		 <if test="eDate != null and eDate != ''">		 	
+		 	AND CREATE_TIME &lt;= #{eDate,jdbcType=VARCHAR}		 	
+		 </if>
+	) AS QI
+    LEFT JOIN (
+		SELECT
+			*
+		FROM
+			topic_field_info
+		WHERE
+			BUSI_TYPE = '05' and delete_flag = 0
+	) t ON t.TOPIC_CD = QI.QUESTION_CD
+	LEFT JOIN recommend_info AS RI ON RI.TOPIC_CD = QI.QUESTION_CD
+	AND RI.BUSI_TYPE = "05"
+	AND RI.RECOMMEND_KBN = 1
+	AND RI.delete_flag = 0
+	LEFT JOIN recommend_info AS TOP ON TOP.TOPIC_CD = QI.QUESTION_CD
+	AND TOP.BUSI_TYPE = "05"
+	AND TOP.RECOMMEND_KBN = 2
+	AND TOP.delete_flag = 0
+	left join mst_code_info mc2 on mc2.CODE_TYPE = 'auditStatus' and mc2.CODE = QI.STATUS
+	left join mst_code_info mc3 on mc3.CODE_TYPE = 'answerStatus' and mc3.CODE = QI.answer
+	WHERE 1=1
+		 <!--回答状态-->
+		 <if test="answerStuts != null and answerStuts != '' and answerStuts.size() != 0">
+		 	AND
+		 	 <foreach collection="answerStuts" item="item" index="index" open="(" separator="or" close=")"  >
+			    QI.answer = #{item}
+			</foreach>
+		 </if>
+         <!--领域-->
+		 <if test="techFieldTypeList != null and techFieldTypeList != '' and techFieldTypeList.size() != 0">
+		 	AND
+		 	 <foreach collection="techFieldTypeList" item="item" index="index" open="(" separator="or" close=")"  >
+			   t.TECH_FIELD_CD = #{item}
+			</foreach>
+		 </if>
+		 <!--推荐置顶状态-->
+		 <if test="recommendKbnlist != null and recommendKbnlist != '' and recommendKbnlist.size() != 0">
+		 	<if test="recommendKbnlist.size() == 1">
+		 		<if test="recommendKbnlist[0] eq 1">
+		 			AND RI.RECOMMEND_KBN = 1
+		 		</if>
+		 		<if test="recommendKbnlist[0] eq 2">
+		 			AND TOP.RECOMMEND_KBN = 2
+		 		</if>
+		 	</if>
+		 	<if test="recommendKbnlist.size() == 2">
+		 		AND RI.RECOMMEND_KBN  = 1 
+		 		OR  TOP.RECOMMEND_KBN = 2
+		 	</if>
+		 </if>
+	group by QI.QUESTION_CD
+	order by QI.UPDATE_TIME desc, QI.CREATE_TIME desc
+  </select>
+  <!--E问一览分页显示__李善瑞-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.QuestionVO" >
+  SELECT
+    COUNT(*)
+  FROM (
+  	SELECT
+      QI.QUESTION_CD
+	FROM
+	(	SELECT
+			QUESTION_CD,
+			QUESTION_NAME,
+			case
+				when (
+					select count(*)
+					from question_answer qa
+					where qa.QUESTION_CD = question_info.QUESTION_CD
+				) > 0 then '1'
+				else 0 
+			END AS answer,
+			CREATE_TIME,
+			STATUS
+		FROM
+			question_info
+		WHERE
+		 <!--E问删除过滤-->
+		 DELETE_FLAG = 0
+		 <!--主题-->
+		 <if test="questionName != null and questionName != ''">
+		 	AND QUESTION_NAME like concat('%',#{questionName,jdbcType=VARCHAR},'%')
+		 </if>		
+		 <!--审核状态-->
+		 <if test="statusList != null and statusList != '' and statusList.size() != 0">
+		 	AND
+		 	 <foreach collection="statusList" item="item" index="index" open="(" separator="or" close=")"  >
+			    STATUS = #{item}
+			</foreach>
+		 </if>
+		<!--提出时间-->
+		 <if test="sDate != null and sDate != ''">		 	
+		 	AND CREATE_TIME &gt;= #{sDate,jdbcType=VARCHAR}		 	
+		 </if>
+		 <if test="eDate != null and eDate != ''">		 	
+		 	AND CREATE_TIME &lt;= #{eDate,jdbcType=VARCHAR}		 	
+		 </if>
+	) AS QI
+    LEFT JOIN (
+		SELECT
+			*
+		FROM
+			topic_field_info
+		WHERE
+			BUSI_TYPE = '05' and delete_flag = 0
+	) t ON t.TOPIC_CD = QI.QUESTION_CD
+	LEFT JOIN recommend_info AS RI ON RI.TOPIC_CD = QI.QUESTION_CD
+	AND RI.BUSI_TYPE = "05"
+	AND RI.RECOMMEND_KBN = 1
+	AND RI.delete_flag = 0
+	LEFT JOIN recommend_info AS TOP ON TOP.TOPIC_CD = QI.QUESTION_CD
+	AND TOP.BUSI_TYPE = "05"
+	AND TOP.RECOMMEND_KBN = 2
+	AND TOP.delete_flag = 0
+	WHERE 1=1
+		 <!--回答状态-->
+		 <if test="answerStuts != null and answerStuts != '' and answerStuts.size() != 0">
+		 	AND
+		 	 <foreach collection="answerStuts" item="item" index="index" open="(" separator="or" close=")"  >
+			    QI.answer = #{item}
+			</foreach>
+		 </if>
+         <!--领域-->
+		 <if test="techFieldTypeList != null and techFieldTypeList != '' and techFieldTypeList.size() != 0">
+		 	AND
+		 	 <foreach collection="techFieldTypeList" item="item" index="index" open="(" separator="or" close=")"  >
+			   t.TECH_FIELD_CD = #{item}
+			</foreach>
+		 </if>
+		 <!--推荐置顶状态-->
+		 <if test="recommendKbnlist != null and recommendKbnlist != '' and recommendKbnlist.size() != 0">
+		 	<if test="recommendKbnlist.size() == 1">
+		 		<if test="recommendKbnlist[0] eq 1">
+		 			AND RI.RECOMMEND_KBN = 1
+		 		</if>
+		 		<if test="recommendKbnlist[0] eq 2">
+		 			AND TOP.RECOMMEND_KBN = 2
+		 		</if>
+		 	</if>
+		 	<if test="recommendKbnlist.size() == 2">
+		 		AND RI.RECOMMEND_KBN  = 1 
+		 		OR  TOP.RECOMMEND_KBN = 2
+		 	</if>
+		 </if>
+	  group by QI.QUESTION_CD
+	) CN
+  </select>
+  <!--E问一览条件筛选__李善瑞-->
+  <select id="selectPagging" resultMap="QuestionVO" parameterType="com.zzj.db.model.QuestionVO" >
+  	SELECT
+		QI.*
+		,mc2.CODE_NAME as statusStr
+		,mc3.CODE_NAME as answerStr
+	FROM
+	(	SELECT
+			QUESTION_CD,
+			QUESTION_NAME,
+			case
+				when (
+					select count(*)
+					from question_answer qa
+					where qa.QUESTION_CD = question_info.QUESTION_CD
+				) > 0 then '1'
+				else 0 
+			END AS answer,
+			UPDATE_TIME,
+			CREATE_TIME,
+			STATUS
+		FROM
+			question_info
+		WHERE
+		 <!--E问删除过滤-->
+		 DELETE_FLAG = 0
+		 <!--主题-->
+		 <if test="questionName != null and questionName != ''">
+		 	AND QUESTION_NAME like concat('%',#{questionName,jdbcType=VARCHAR},'%')
+		 </if>		
+		 <!--审核状态-->
+		 <if test="statusList != null and statusList != '' and statusList.size() != 0">
+		 	AND
+		 	 <foreach collection="statusList" item="item" index="index" open="(" separator="or" close=")"  >
+			    STATUS = #{item}
+			</foreach>
+		 </if>
+		<!--提出时间-->
+		 <if test="sDate != null and sDate != ''">		 	
+		 	AND CREATE_TIME &gt;= #{sDate,jdbcType=VARCHAR}		 	
+		 </if>
+		 <if test="eDate != null and eDate != ''">		 	
+		 	AND CREATE_TIME &lt;= #{eDate,jdbcType=VARCHAR}		 	
+		 </if>
+	) AS QI
+    LEFT JOIN (
+		SELECT
+			*
+		FROM
+			topic_field_info
+		WHERE
+			BUSI_TYPE = '05' and delete_flag = 0
+	) t ON t.TOPIC_CD = QI.QUESTION_CD
+	LEFT JOIN recommend_info AS RI ON RI.TOPIC_CD = QI.QUESTION_CD
+	AND RI.BUSI_TYPE = "05"
+	AND RI.RECOMMEND_KBN = 1
+	AND RI.delete_flag = 0
+	LEFT JOIN recommend_info AS TOP ON TOP.TOPIC_CD = QI.QUESTION_CD
+	AND TOP.BUSI_TYPE = "05"
+	AND TOP.RECOMMEND_KBN = 2
+	AND TOP.delete_flag = 0
+	left join mst_code_info mc2 on mc2.CODE_TYPE = 'auditStatus' and mc2.CODE = QI.STATUS
+	left join mst_code_info mc3 on mc3.CODE_TYPE = 'answerStatus' and mc3.CODE = QI.answer
+	WHERE 1=1
+		 <!--回答状态-->
+		 <if test="answerStuts != null and answerStuts != '' and answerStuts.size() != 0">
+		 	AND
+		 	 <foreach collection="answerStuts" item="item" index="index" open="(" separator="or" close=")"  >
+			    QI.answer = #{item}
+			</foreach>
+		 </if>
+         <!--领域-->
+		 <if test="techFieldTypeList != null and techFieldTypeList != '' and techFieldTypeList.size() != 0">
+		 	AND
+		 	 <foreach collection="techFieldTypeList" item="item" index="index" open="(" separator="or" close=")"  >
+			   t.TECH_FIELD_CD = #{item}
+			</foreach>
+		 </if>
+		 <!--推荐置顶状态-->
+		 <if test="recommendKbnlist != null and recommendKbnlist != '' and recommendKbnlist.size() != 0">
+		 	<if test="recommendKbnlist.size() == 1">
+		 		<if test="recommendKbnlist[0] eq 1">
+		 			AND RI.RECOMMEND_KBN = 1
+		 		</if>
+		 		<if test="recommendKbnlist[0] eq 2">
+		 			AND TOP.RECOMMEND_KBN = 2
+		 		</if>
+		 	</if>
+		 	<if test="recommendKbnlist.size() == 2">
+		 		AND RI.RECOMMEND_KBN  = 1 
+		 		OR  TOP.RECOMMEND_KBN = 2
+		 	</if>
+		 </if>
+	group by QI.QUESTION_CD
+	order by QI.UPDATE_TIME desc, QI.CREATE_TIME desc
+	limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+   <!--E问一览修改__李善瑞-->
+  <update id="update" parameterType="com.zzj.db.dto.QuestionInfo" >
+    update question_info
+    <set >
+      <if test="questionName != null" >
+        QUESTION_NAME = #{questionName,jdbcType=VARCHAR},
+      </if>
+      <if test="questionContent != null" >
+        QUESTION_CONTENT = #{questionContent,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyWord != null" >
+        KEYWORD = #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where QUESTION_CD = #{questionCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键查询Question_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="QuestionVO" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from question_info
+    where QUESTION_CD = #{questionCd,jdbcType=VARCHAR}
+    and DELETE_FLAG = "0"
+  </select>
+  <!--根据主键删除Question_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from question_info
+    where QUESTION_CD = #{questionCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.QuestionInfo" >
+    insert into question_info (QUESTION_CD, QUESTION_NAME, QUESTION_CONTENT, 
+      STATUS, REFUSE_MEMO, KEYWORD, TOP_FLAG, AUDIT_ID, AUDIT_TIME, 
+      DELETE_FLAG, CREATE_ID, CREATE_TIME, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{questionCd,jdbcType=VARCHAR}, #{questionName,jdbcType=VARCHAR}, #{questionContent,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{refuseMemo,jdbcType=VARCHAR}, #{keyWord,jdbcType=VARCHAR}, #{topFlag,jdbcType=TINYINT}, 
+      #{auditId,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=TINYINT}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.QuestionInfo" >
+    insert into question_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="questionCd != null" >
+        QUESTION_CD,
+      </if>
+      <if test="questionName != null" >
+        QUESTION_NAME,
+      </if>
+      <if test="questionContent != null" >
+        QUESTION_CONTENT,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="keyWord != null" >
+        KEYWORD,
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG,
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO,
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID,
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="questionCd != null" >
+        #{questionCd,jdbcType=VARCHAR},
+      </if>
+      <if test="questionName != null" >
+        #{questionName,jdbcType=VARCHAR},
+      </if>
+      <if test="questionContent != null" >
+        #{questionContent,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="refuseMemo != null" >
+        #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyWord != null" >
+        #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null" >
+        #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Question_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.QuestionInfo" >
+    update question_info
+    <set >
+      <if test="questionName != null" >
+        QUESTION_NAME = #{questionName,jdbcType=VARCHAR},
+      </if>
+      <if test="questionContent != null" >
+        QUESTION_CONTENT = #{questionContent,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="refuseMemo != null" >
+        REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="keyWord != null" >
+        KEYWORD = #{keyWord,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null" >
+        TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      </if>
+      <if test="auditId != null" >
+        AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where QUESTION_CD = #{questionCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Question_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.QuestionInfo" >
+    update question_info
+    set QUESTION_NAME = #{questionName,jdbcType=VARCHAR},
+      QUESTION_CONTENT = #{questionContent,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=TINYINT},
+      REFUSE_MEMO = #{refuseMemo,jdbcType=VARCHAR},
+      KEYWORD = #{keyWord,jdbcType=VARCHAR},
+      TOP_FLAG = #{topFlag,jdbcType=TINYINT},
+      AUDIT_ID = #{auditId,jdbcType=VARCHAR},
+      AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+      DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where QUESTION_CD = #{questionCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据TopicFieldInfo查询Question_Info中指定记录-->
+  <select id="slideEditSearch" resultMap="BaseResultMap" parameterType="com.zzj.db.model.SlideResultVO" >
+  	select 
+    <include refid="Base_Column_List" />
+    from question_info
+    where
+    QUESTION_CD in (
+    select TOPIC_CD 
+    from topic_field_info 
+    where
+    DELETE_FLAG = 0
+    <if test="slideResultBusi != null" >
+    and BUSI_TYPE = #{slideResultBusi,jdbcType=VARCHAR}
+    </if>
+    <if test="techField != 'null'" > 
+    and TECH_FIELD_CD = #{techField,jdbcType=VARCHAR}
+    </if>
+    ) 
+    <if test="slideResultTopic != null" >
+    and QUESTION_NAME like CONCAT('%',#{slideResultTopic,jdbcType=VARCHAR},'%')
+    </if>
+    and DELETE_FLAG = '0'
+  </select>
+</mapper>

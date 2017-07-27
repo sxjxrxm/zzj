@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="dialect" value="mysql" />
+		<!-- 在任意时间存在的活动（也就是正在使用）连接的数量 -->
+		<property name="poolMaximumActiveConnections" value="10"/>
+		<!-- 任意时间存在的空闲连接数 -->
+		<property name="poolMaximumIdleConnections" value="5"/>
+		<!-- 在被强制返回之前，池中连接被检查的时间 -->
+		<property name="poolMaximumCheckoutTime" value="20000"/>
+		<!-- 这是给连接池一个打印日志状态机会的低层次设置，还有重新尝试获得连接，这些情况下往往需要很长时间（为了避免连接池没有配置时静默失败） -->
+		<property name="poolTimeToWait" value="20000"/>
+	</properties>
+	<!-- org.apache.ibatis.logging.slf4j.Slf4jImpl STDOUT_LOGGING -->
+	<settings>
+		<setting name="logImpl" value="SLF4J" />
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<setting name="useColumnLabel" value="true" />
+		<setting name="useGeneratedKeys" value="false" />
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
+		<setting name="defaultStatementTimeout" value="25000" />
+		<setting name="safeRowBoundsEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+		<setting name="localCacheScope" value="SESSION" />
+		<setting name="jdbcTypeForNull" value="OTHER" />
+		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />
+	</settings>
+	<typeAliases>
+		<package name="com.zzj.db" />
+	</typeAliases>
+</configuration>

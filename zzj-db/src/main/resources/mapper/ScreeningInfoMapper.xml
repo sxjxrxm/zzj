@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.ScreeningInfoMapper" >
+  <!--表查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.ScreeningInfo" >
+    <id column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="SCREENING_01" property="screening01" jdbcType="VARCHAR" />
+    <result column="SCREENING_02" property="screening02" jdbcType="VARCHAR" />
+    <result column="SCREENING_03" property="screening03" jdbcType="VARCHAR" />
+    <result column="SCREENING_04" property="screening04" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="TINYINT" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="NAME1" property="name1" jdbcType="VARCHAR" />
+    <result column="NAME2" property="name2" jdbcType="VARCHAR" />
+    <result column="NAME3" property="name3" jdbcType="VARCHAR" />
+    <result column="NAME4" property="name4" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE_NAME" property="busiTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    BUSI_TYPE, SCREENING_01, SCREENING_02, SCREENING_03, SCREENING_04, DELETE_FLAG, UPDATE_ID, 
+    UPDATE_TIME
+  </sql>
+  <!--根据主键查询Screening_Info表中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from screening_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除Screening_Info表中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from screening_info
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->  
+  <insert id="insert" parameterType="com.zzj.db.dto.ScreeningInfo" >
+    insert into screening_info (BUSI_TYPE, SCREENING_01, SCREENING_02, 
+      SCREENING_03, SCREENING_04, DELETE_FLAG, 
+      UPDATE_ID, UPDATE_TIME)
+    values (#{busiType,jdbcType=VARCHAR}, #{screening01,jdbcType=VARCHAR}, #{screening02,jdbcType=VARCHAR}, 
+      #{screening03,jdbcType=VARCHAR}, #{screening04,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=TINYINT}, 
+      #{updateId,jdbcType=VARCHAR}, now())
+  </insert>
+  <!--有条件的插入指定记录-->  
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.ScreeningInfo" >
+    insert into screening_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="busiType != null" >
+        BUSI_TYPE,
+      </if>
+      <if test="screening01 != null" >
+        SCREENING_01,
+      </if>
+      <if test="screening02 != null" >
+        SCREENING_02,
+      </if>
+      <if test="screening03 != null" >
+        SCREENING_03,
+      </if>
+      <if test="screening04 != null" >
+        SCREENING_04,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="busiType != null" >
+        #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="screening01 != null" >
+        #{screening01,jdbcType=VARCHAR},
+      </if>
+      <if test="screening02 != null" >
+        #{screening02,jdbcType=VARCHAR},
+      </if>
+      <if test="screening03 != null" >
+        #{screening03,jdbcType=VARCHAR},
+      </if>
+      <if test="screening04 != null" >
+        #{screening04,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Screening_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.ScreeningInfo" >
+    update screening_info
+    <set >
+      <if test="screening01 != null" >
+        SCREENING_01 = #{screening01,jdbcType=VARCHAR},
+      </if>
+      <if test="screening02 != null" >
+        SCREENING_02 = #{screening02,jdbcType=VARCHAR},
+      </if>
+      <if test="screening03 != null" >
+        SCREENING_03 = #{screening03,jdbcType=VARCHAR},
+      </if>
+      <if test="screening04 != null" >
+        SCREENING_04 = #{screening04,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=TINYINT},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Screening_Info表中指定记录-->  
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.ScreeningInfo" >
+    update screening_info
+    set SCREENING_01 = #{screening01,jdbcType=VARCHAR},
+      SCREENING_02 = #{screening02,jdbcType=VARCHAR},
+      SCREENING_03 = #{screening03,jdbcType=VARCHAR},
+      SCREENING_04 = #{screening04,jdbcType=VARCHAR},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = now()
+    where BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+  </update>
+  <!--选择各业务的筛选条件-->  
+  <select id="selectAllScreeningInfo" resultMap="BaseResultMap" >
+	SELECT
+	  mci.CODE_NAME AS BUSI_TYPE_NAME,mci.CODE AS BUSI_TYPE,
+	  scri.SCREENING_01,scri.SCREENING_02,scri.SCREENING_03,scri.SCREENING_04,
+	  mci1.CODE_NAME AS NAME1,mci2.CODE_NAME AS NAME2,mci3.CODE_NAME AS NAME3,mci4.CODE_NAME AS NAME4
+	FROM
+	  mst_code_info mci
+	LEFT JOIN screening_info scri 
+	  ON  mci.CODE = scri.BUSI_TYPE
+	LEFT JOIN mst_code_info mci1
+	  ON mci1.CODE_TYPE = 'screeningType'
+	  AND scri.SCREENING_01 = mci1.CODE
+	LEFT JOIN mst_code_info mci2
+	  ON mci2.CODE_TYPE = 'screeningType'
+	  AND scri.SCREENING_02 = mci2.CODE
+	LEFT JOIN mst_code_info mci3
+	  ON mci3.CODE_TYPE = 'screeningType'
+	  AND scri.SCREENING_03 = mci3.CODE
+	LEFT JOIN mst_code_info mci4
+	  ON mci4.CODE_TYPE = 'screeningType'
+	  AND scri.SCREENING_04 = mci4.CODE
+	WHERE
+	  mci.CODE_TYPE = 'busiType'
+	  AND mci.DELETE_FLAG = '0'
+	ORDER BY BUSI_TYPE
+  </select>
+  
+</mapper>

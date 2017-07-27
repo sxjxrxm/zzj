@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.LiveInfoMapper" >
+	<!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.LiveInfo" >
+    <id column="LIVE_CD" property="liveCd" jdbcType="VARCHAR" />
+    <result column="LIVE_NAME" property="liveName" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="INVALID_DATE" property="invalidDate" jdbcType="TIMESTAMP" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="BIT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_DISCOUNT" property="priceDiscount" jdbcType="DECIMAL" />
+    <result column="BIG_ICON" property="bigIcon" jdbcType="VARCHAR" />
+    <result column="LITTLE_ICON" property="littleIcon" jdbcType="VARCHAR" />
+    <result column="PUSH_ADDRESS" property="pushAddress" jdbcType="VARCHAR" />
+    <result column="RTMP_ADDRESS" property="rtmpAddress" jdbcType="VARCHAR" />
+    <result column="FLV_ADDRESS" property="flvAddress" jdbcType="VARCHAR" />
+    <result column="HLS_ADDRESS" property="hlsAddress" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="SHARE_URL" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="BIT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ROOM_ID" property="roomId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zzj.db.dto.LiveInfo" extends="BaseResultMap" >
+    <result column="LIVE_BRIEF" property="liveBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="LiveInfoVO" type="com.zzj.db.model.LiveInfoVO" > 
+    <id column="LIVE_CD" property="liveCd" jdbcType="VARCHAR" />
+    <result column="LIVE_NAME" property="liveName" jdbcType="VARCHAR" />
+    <result column="START_TIME" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="INVALID_DATE" property="invalidDate" jdbcType="TIMESTAMP" />
+    <result column="PAYMENT_KBN" property="paymentKbn" jdbcType="BIT" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="PRICE_DISCOUNT" property="priceDiscount" jdbcType="DECIMAL" />
+    <result column="BIG_ICON" property="bigIcon" jdbcType="VARCHAR" />
+    <result column="LITTLE_ICON" property="littleIcon" jdbcType="VARCHAR" />
+    <result column="PUSH_ADDRESS" property="pushAddress" jdbcType="VARCHAR" />
+    <result column="RTMP_ADDRESS" property="rtmpAddress" jdbcType="VARCHAR" />
+    <result column="FLV_ADDRESS" property="flvAddress" jdbcType="VARCHAR" />
+    <result column="HLS_ADDRESS" property="hlsAddress" jdbcType="VARCHAR" />
+    <result column="KEYWORD" property="keyword" jdbcType="VARCHAR" />
+    <result column="SHARE_URL" property="shareUrl" jdbcType="VARCHAR" />
+    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="BIT" />
+    <result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_ID" property="updateId" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ROOM_ID" property="roomId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="LiveInfoVO2" type="com.zzj.db.model.LiveInfoVO" extends="LiveInfoVO" >
+    <result column="LIVE_BRIEF" property="liveBrief" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    LIVE_CD, LIVE_NAME, ROOM_ID, START_TIME, END_TIME, INVALID_DATE, PAYMENT_KBN, PRICE, PRICE_DISCOUNT, 
+    BIG_ICON, LITTLE_ICON, PUSH_ADDRESS, RTMP_ADDRESS, FLV_ADDRESS, HLS_ADDRESS, KEYWORD, SHARE_URL, DELETE_FLAG, 
+    CREATE_ID, CREATE_TIME, UPDATE_ID, UPDATE_TIME
+  </sql>
+  <sql id="Blob_Column_List" >
+    LIVE_BRIEF
+  </sql>
+  <!--根据主键查询Live_Info中指定记录-->
+  <select id="selectByPrimaryKey" resultMap="LiveInfoVO2" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from live_info
+    where LIVE_CD = #{liveCd,jdbcType=VARCHAR}
+    and DELETE_FLAG in (0,2)
+  </select>
+  <!--根据条件查询Live_Info中分页记录***********-->
+  <select id="selectPagging" resultType="com.zzj.db.model.LiveInfoVO" parameterType="com.zzj.db.model.LiveInfoVO" >
+	  SELECT
+	      live.LIVE_CD as liveCd,
+	      live.LIVE_NAME as liveName,
+	      (CASE WHEN START_TIME &lt; now() THEN 1 WHEN START_TIME &gt;= now() THEN 0 END) as startFlag,
+	      (CASE WHEN INVALID_DATE &lt; now() THEN 1 WHEN INVALID_DATE &gt;= now() THEN 0 END) as invalidFlag,
+	      mc1.CODE_NAME as paymentKbnDisp,
+	      uh.LIKE_COUNT as likeCount,
+	      uh.COLLECT_COUNT as collectCount,
+	      uh.SCAN_COUNT as scanCount
+	  FROM (
+		       select 
+                    DISTINCT
+					lf.LIVE_CD
+					,lf.UPDATE_TIME
+					,lf.CREATE_TIME
+					,lf.LIVE_NAME
+					,lf.PAYMENT_KBN
+					,lf.START_TIME
+					,lf.INVALID_DATE
+				from live_info lf
+				left join (select * from topic_field_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) t on t.TOPIC_CD = lf.LIVE_CD
+				where lf.DELETE_FLAG in (0,2)
+			    <if test="liveName != null" >
+			      AND lf.LIVE_NAME like concat('%',#{liveName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="paymentKbnDisp != null" >
+			      AND lf.PAYMENT_KBN in ( ${paymentKbnDisp} )
+			    </if>
+			    <if test="sDate != null" >
+			      AND lf.CREATE_TIME &gt;= #{sDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="eDate != null" >
+			      AND lf.CREATE_TIME &lt;= #{eDate,jdbcType=TIMESTAMP}
+			    </if>
+		) live
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'paymentKbn' and mc1.CODE = live.PAYMENT_KBN
+	    left join user_handle_info uh on uh.BUSI_TYPE = '03' and uh.TOPIC_CD = live.LIVE_CD
+		order by live.UPDATE_TIME DESC , live.CREATE_TIME DESC
+		limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据条件查询Live_Info中所有记录***********-->
+  <select id="selectAll" resultType="com.zzj.db.model.LiveInfoVO" parameterType="com.zzj.db.model.LiveInfoVO" >
+	  SELECT
+	      live.LIVE_CD as liveCd,
+	      live.LIVE_NAME as liveName,
+	      mc1.CODE_NAME as paymentKbnDisp,
+	      uh.LIKE_COUNT as likeCount,
+	      uh.COLLECT_COUNT as collectCount,
+	      uh.SCAN_COUNT as scanCount
+	  FROM (
+		       select 
+                    DISTINCT
+					lf.LIVE_CD
+					,lf.UPDATE_TIME
+					,lf.CREATE_TIME
+					,lf.LIVE_NAME
+					,lf.PAYMENT_KBN
+				from live_info lf
+				left join (select * from topic_field_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) t on t.TOPIC_CD = lf.LIVE_CD
+				where lf.DELETE_FLAG in (0,2)
+			    <if test="liveName != null" >
+			      AND lf.LIVE_NAME like concat('%',#{liveName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="paymentKbnDisp != null" >
+			      AND lf.PAYMENT_KBN in ( ${paymentKbnDisp} )
+			    </if>
+			    <if test="sDate != null" >
+			      AND lf.CREATE_TIME &gt;= #{sDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="eDate != null" >
+			      AND lf.CREATE_TIME &lt;= #{eDate,jdbcType=TIMESTAMP}
+			    </if>
+		) live
+	    left join mst_code_info mc1 on mc1.CODE_TYPE = 'paymentKbn' and mc1.CODE = live.PAYMENT_KBN
+	    left join user_handle_info uh on uh.BUSI_TYPE = '03' and uh.TOPIC_CD = live.LIVE_CD
+		order by live.UPDATE_TIME DESC , live.CREATE_TIME DESC
+  </select>
+  <!--根据条件查询Live_Info中所有记录总数***********-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.LiveInfoVO" >
+	  SELECT
+	      count(*)
+	  FROM (
+		       select 
+                    DISTINCT
+					lf.LIVE_CD
+				from live_info lf
+				left join (select * from topic_field_info where BUSI_TYPE = '03' and DELETE_FLAG = 0) t on t.TOPIC_CD = lf.LIVE_CD
+				where lf.DELETE_FLAG in (0,2)
+			    <if test="liveName != null" >
+			      AND lf.LIVE_NAME like concat('%',#{liveName,jdbcType=VARCHAR},'%')
+			    </if>
+			    <if test="field != null" >
+	              AND t.TECH_FIELD_CD in ( ${field} )
+	            </if>
+			    <if test="paymentKbnDisp != null" >
+			      AND lf.PAYMENT_KBN in ( ${paymentKbnDisp} )
+			    </if>
+			    <if test="sDate != null" >
+			      AND lf.CREATE_TIME &gt;= #{sDate,jdbcType=TIMESTAMP}
+			    </if>
+			    <if test="eDate != null" >
+			      AND lf.CREATE_TIME &lt;= #{eDate,jdbcType=TIMESTAMP}
+			    </if>
+		) live
+  </select>
+  <!--根据主键删除Live_Info中指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from live_info
+    where LIVE_CD = #{liveCd,jdbcType=VARCHAR}
+  </delete>
+   <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.LiveInfo" >
+    insert into live_info (LIVE_CD, LIVE_NAME, ROOM_ID, LIVE_BRIEF, 
+      START_TIME, END_TIME, PAYMENT_KBN, 
+      PRICE, PRICE_DISCOUNT, BIG_ICON, 
+      LITTLE_ICON, PUSH_ADDRESS, RTMP_ADDRESS, FLV_ADDRESS, HLS_ADDRESS,
+      KEYWORD, SHARE_URL, DELETE_FLAG, 
+      CREATE_ID, CREATE_TIME, UPDATE_ID, 
+      UPDATE_TIME)
+    values (#{liveCd,jdbcType=VARCHAR}, #{liveName,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, #{liveBrief,jdbcType=LONGVARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{paymentKbn,jdbcType=BIT}, 
+      #{price,jdbcType=DECIMAL}, #{priceDiscount,jdbcType=DECIMAL}, #{bigIcon,jdbcType=VARCHAR}, 
+      #{littleIcon,jdbcType=VARCHAR}, #{pushAddress,jdbcType=VARCHAR}, #{rtmpAddress,jdbcType=VARCHAR}, #{flvAddress,jdbcType=VARCHAR}, #{hlsAddress,jdbcType=VARCHAR}, 
+      #{keyword,jdbcType=VARCHAR}, #{shareUrl,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=BIT}, 
+      #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--有条件的插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.LiveInfo" >
+    insert into live_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="liveCd != null" >
+        LIVE_CD,
+      </if>
+      <if test="liveName != null" >
+        LIVE_NAME,
+      </if>
+      <if test="roomId != null" >
+        ROOM_ID,
+      </if>
+      <if test="liveBrief != null" >
+        LIVE_BRIEF,
+      </if>
+      <if test="startTime != null" >
+        START_TIME,
+      </if>
+      <if test="endTime != null" >
+        END_TIME,
+      </if>
+      <if test="invalidDate != null" >
+        INVALID_DATE,
+      </if>
+      <if test="paymentKbn != null" >
+        PAYMENT_KBN,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="priceDiscount != null" >
+        PRICE_DISCOUNT,
+      </if>
+      <if test="bigIcon != null" >
+        BIG_ICON,
+      </if>
+      <if test="littleIcon != null" >
+        LITTLE_ICON,
+      </if>
+      <if test="pushAddress != null" >
+        PUSH_ADDRESS,
+      </if>
+      <if test="rtmpAddress != null" >
+        RTMP_ADDRESS,
+      </if>
+      <if test="flvAddress != null" >
+        FLV_ADDRESS,
+      </if>
+      <if test="hlsAddress != null" >
+        HLS_ADDRESS,
+      </if>
+      <if test="keyword != null" >
+        KEYWORD,
+      </if>
+      <if test="shareUrl != null" >
+        SHARE_URL,
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG,
+      </if>
+      <if test="createId != null" >
+        CREATE_ID,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="liveCd != null" >
+        #{liveCd,jdbcType=VARCHAR},
+      </if>
+      <if test="liveName != null" >
+        #{liveName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="liveBrief != null" >
+        #{liveBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invalidDate != null" >
+        #{invalidDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentKbn != null" >
+        #{paymentKbn,jdbcType=BIT},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="priceDiscount != null" >
+        #{priceDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="bigIcon != null" >
+        #{bigIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="littleIcon != null" >
+        #{littleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="pushAddress != null" >
+        #{pushAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="rtmpAddress != null" >
+        #{rtmpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="flvAddress != null" >
+        #{flvAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hlsAddress != null" >
+        #{hlsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=BIT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新Live_Info中指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.LiveInfo" >
+    update live_info
+    <set >
+      <if test="liveName != null" >
+        LIVE_NAME = #{liveName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        ROOM_ID = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="liveBrief != null" >
+        LIVE_BRIEF = #{liveBrief,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="startTime != null" >
+        START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invalidDate != null" >
+        INVALID_DATE = #{invalidDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentKbn != null" >
+        PAYMENT_KBN = #{paymentKbn,jdbcType=BIT},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="price == null" >
+        PRICE = null,
+      </if>
+      <if test="priceDiscount != null" >
+        PRICE_DISCOUNT = #{priceDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="bigIcon != null" >
+        BIG_ICON = #{bigIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="littleIcon != null" >
+        LITTLE_ICON = #{littleIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="pushAddress != null" >
+        PUSH_ADDRESS = #{pushAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="rtmpAddress != null" >
+        RTMP_ADDRESS = #{rtmpAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="flvAddress != null" >
+        FLV_ADDRESS = #{flvAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="hlsAddress != null" >
+        HLS_ADDRESS = #{hlsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        KEYWORD = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="shareUrl != null" >
+        SHARE_URL = #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        DELETE_FLAG = #{deleteFlag,jdbcType=BIT},
+      </if>
+      <if test="createId != null" >
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null" >
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where LIVE_CD = #{liveCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据主键更新Live_Info中指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.LiveInfo" >
+    update live_info
+    set LIVE_NAME = #{liveName,jdbcType=VARCHAR},
+      LIVE_BRIEF = #{liveBrief,jdbcType=LONGVARCHAR},
+      ROOM_ID = #{roomId,jdbcType=VARCHAR},
+      START_TIME = #{startTime,jdbcType=TIMESTAMP},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},
+      INVALID_DATE = #{invalidDate,jdbcType=TIMESTAMP},
+      PAYMENT_KBN = #{paymentKbn,jdbcType=BIT},
+      PRICE = #{price,jdbcType=DECIMAL},
+      PRICE_DISCOUNT = #{priceDiscount,jdbcType=DECIMAL},
+      BIG_ICON = #{bigIcon,jdbcType=VARCHAR},
+      LITTLE_ICON = #{littleIcon,jdbcType=VARCHAR},
+      PUSH_ADDRESS = #{pushAddress,jdbcType=VARCHAR},
+      RTMP_ADDRESS = #{rtmpAddress,jdbcType=VARCHAR},
+      FLV_ADDRESS = #{flvAddress,jdbcType=VARCHAR},
+      HLS_ADDRESS = #{hlsAddress,jdbcType=VARCHAR},
+      KEYWORD = #{keyword,jdbcType=VARCHAR},
+      SHARE_URL = #{shareUrl,jdbcType=VARCHAR},
+      DELETE_FLAG = #{deleteFlag,jdbcType=BIT},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where LIVE_CD = #{liveCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据TopicFieldInfo查询Expert_Info中指定记录-->
+  <select id="slideEditSearch" resultMap="BaseResultMap" parameterType="com.zzj.db.model.SlideResultVO" >
+  	select 
+    <include refid="Base_Column_List" />
+    from live_info
+    where
+    LIVE_CD in (
+	    select TOPIC_CD 
+	    from topic_field_info 
+	    where DELETE_FLAG = 0
+	    <if test="slideResultBusi != null" >
+	    and BUSI_TYPE = #{slideResultBusi,jdbcType=VARCHAR}
+	    </if>
+	    <if test="techField != 'null'" > 
+	    and TECH_FIELD_CD = #{techField,jdbcType=VARCHAR}
+	    </if>
+    ) 
+    <if test="slideResultTopic != null" >
+    and LIVE_NAME like CONCAT('%',#{slideResultTopic,jdbcType=VARCHAR},'%')
+    </if>
+    and DELETE_FLAG in (0,2)
+  </select>
+</mapper>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzj.db.dao.UserLikeInfoMapper" >
+  <!--查询结果数据结构定义-->
+  <resultMap id="BaseResultMap" type="com.zzj.db.dto.UserLikeInfo" >
+    <id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR" />
+    <result column="HANDLE_TIME" property="handleTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 查询结果数据结构定义 -->
+  <resultMap id="ActionResultMap" type="com.zzj.db.model.ActionResultVO" >
+    <id column="TOPIC_CD" property="topicCd" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE" property="busiType" jdbcType="VARCHAR" />
+    <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR" />
+    <result column="HANDLE_TIME" property="handleTime" jdbcType="TIMESTAMP" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="BUSI_TYPE_NAME" property="busiTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--查询结果列定义-->
+  <sql id="Base_Column_List" >
+    USER_ID, TOPIC_CD, BUSI_TYPE, TOPIC_NAME, HANDLE_TIME
+  </sql>
+  <!--根据主键查询指定记录-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.zzj.db.dto.UserLikeInfoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_like_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </select>
+  <!--根据主键删除指定记录-->
+  <delete id="deleteByPrimaryKey" parameterType="com.zzj.db.dto.UserLikeInfoKey" >
+    delete from user_like_info
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </delete>
+  <!--插入指定记录-->
+  <insert id="insert" parameterType="com.zzj.db.dto.UserLikeInfo" >
+    insert into user_like_info (USER_ID, TOPIC_CD, BUSI_TYPE, 
+      TOPIC_NAME, HANDLE_TIME)
+    values (#{userId,jdbcType=VARCHAR}, #{topicCd,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, 
+      #{topicName,jdbcType=VARCHAR}, #{handleTime,jdbcType=TIMESTAMP})
+  </insert>
+  <!--插入指定记录-->
+  <insert id="insertSelective" parameterType="com.zzj.db.dto.UserLikeInfo" >
+    insert into user_like_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="topicCd != null" >
+        TOPIC_CD,
+      </if>
+      <if test="busiType != null" >
+        BUSI_TYPE,
+      </if>
+      <if test="topicName != null" >
+        TOPIC_NAME,
+      </if>
+      <if test="handleTime != null" >
+        HANDLE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicCd != null" >
+        #{topicCd,jdbcType=VARCHAR},
+      </if>
+      <if test="busiType != null" >
+        #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null" >
+        #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--根据条件更新指定记录-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzj.db.dto.UserLikeInfo" >
+    update user_like_info
+    <set >
+      <if test="busiType != null" >
+        BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null" >
+        TOPIC_NAME = #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="handleTime != null" >
+        HANDLE_TIME = #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据条件更新指定记录-->
+  <update id="updateByPrimaryKey" parameterType="com.zzj.db.dto.UserLikeInfo" >
+    update user_like_info
+    set BUSI_TYPE = #{busiType,jdbcType=VARCHAR},
+      TOPIC_NAME = #{topicName,jdbcType=VARCHAR},
+      HANDLE_TIME = #{handleTime,jdbcType=TIMESTAMP}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+  </update>
+  <!--根据条件查询分页记录-->
+  <select id="selectByOption" resultMap="ActionResultMap" parameterType="com.zzj.db.model.ActionJknVO" >
+    select 
+      uli.TOPIC_CD,uli.BUSI_TYPE,uli.TOPIC_NAME,uli.HANDLE_TIME,
+      mci.CODE_NAME AS BUSI_TYPE_NAME,aui.USER_NAME
+    from user_like_info uli
+    LEFT JOIN app_users_info aui
+      ON uli.USER_ID = aui.USER_ID
+	LEFT JOIN mst_code_info mci
+		ON mci.CODE_TYPE = 'busiType' AND
+		   uli.BUSI_TYPE = mci.CODE
+    where uli.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and uli.TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+	  and uli.HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+	order by uli.HANDLE_TIME
+	limit #{dbIndex,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+  <!--根据条件查询总件数-->
+  <select id="selectTotalCount" resultType="java.lang.Integer" parameterType="com.zzj.db.model.ActionJknVO" >
+    select 
+      count(uli.USER_ID)
+    from user_like_info uli
+    LEFT JOIN app_users_info aui
+      ON uli.USER_ID = aui.USER_ID
+    where uli.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and uli.TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+	  and uli.HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+  </select>
+  <!--根据条件查询全件输出CSV-->
+  <select id="selectAll" resultMap="ActionResultMap" parameterType="com.zzj.db.model.ActionJknVO" >
+    select 
+      uli.TOPIC_CD,uli.BUSI_TYPE,uli.TOPIC_NAME,uli.HANDLE_TIME,
+      mci.CODE_NAME AS BUSI_TYPE_NAME,aui.USER_NAME
+    from user_like_info uli
+    LEFT JOIN app_users_info aui
+      ON uli.USER_ID = aui.USER_ID
+	LEFT JOIN mst_code_info mci
+		ON mci.CODE_TYPE = 'busiType' AND
+		   uli.BUSI_TYPE = mci.CODE
+    where uli.BUSI_TYPE = #{busiType,jdbcType=VARCHAR}
+      and uli.TOPIC_CD = #{topicCd,jdbcType=VARCHAR}
+	  and uli.HANDLE_TIME BETWEEN #{startDate,jdbcType=TIMESTAMP} AND #{endDate,jdbcType=TIMESTAMP}
+	order by uli.HANDLE_TIME
+  </select>
+</mapper>
